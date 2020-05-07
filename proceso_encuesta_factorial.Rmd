@@ -79,6 +79,15 @@ prestigio" expuesta en un estudio del PNUD (2017). Los apellidos incorporados de
 * __55:__ 53, 55 y 57 años.   
 <div/>
 
+## Introducción a la encuesta
+<div style="text-align: justify">
+Cabe destacar que, antes de comenzar a presentarle las viñetas al encuestado, se le presentó el siguiente mensaje de introducción:   
+"En este cuestionario se le presentarán 12 descripciones de personas junto con dos preguntas: (1) ¿Cuánto cree usted que la persona descrita **paga actualmente** en impuesto a la renta? y (2) ¿Cuánto cree usted que la persona descrita **debería pagar** en impuesto a la renta? A continuación se muestra un ejemplo de cómo debe contestar las preguntas.  
+![Ejemplo](input/ej-intro.png "Ejemplo")  
+
+Antes de responder, **por favor, lea la siguiente información con atención.** En Chile existen distintos tipos de impuestos, algunos de los más comunes son el IVA (recargo del 19% al precio de cualquier producto o servicio), el impuesto a los combustibles y **el impuesto a la renta (mensualmente quienes reciben rentas por trabajo deben pagar un impuesto según sus ingresos)**. Es necesario aclarar que **el pago de las cotizaciones previsionales y de salud (AFP y FONASA o ISAPRE) no es lo mismo** que el impuesto a la renta."   
+<div/>
+
 # Construcción del instrumento de medición
 <div style="text-align: justify">
 A continuación se expondrá el proceso de construcción del instrumento. Tras la definición de las dimensiones y niveles se procedió a seleccionar la muestra de viñetas a través de SAS Studio. Es posible subdividir este proceso en tres partes para explicar de mejor forma el procedimiento: la primera orientada a escoger el tamaño de la muestra de viñetas, la segunda enfocada en seleccionar la combinación con el mejor D-efficient y la tercera dirigida a generar las combinaciones para los bloques de viñetas. El resultado de este proceso se transformó en las frases para los bloques de viñetas a través de R y luego se traspaso a la plataforma Qualtrics para finalizar la elaboración de la encuesta. 
