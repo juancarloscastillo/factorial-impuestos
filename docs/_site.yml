@@ -1,0 +1,35 @@
+name: "factorial2020"
+output_dir: "." # Esto es para que se compile en el rootdir
+navbar:
+  title: "Factorial Survey: Perceived and Just taxes"
+  right:
+    - text: "Data preparation"
+      menu:
+        - text: "Vignette generation"  
+          href: "prod_gen-vig.html"
+        - text: "Data preparation A"  
+          href: "prod_prep-data-a.html"
+        - text: "Data preparation B"  
+          href: "prod_prep-data-b.html"  
+    - text: "Analysis"
+      href: "prod_analysis.html"
+    - text: "Paper"
+      href: "paper.html"
+    - text: ""
+      icon: fa-file-pdf
+      href: "paper.pdf"
+    - text: ""
+      icon: fa-github fa-lg
+      href: https://github.com/juancarloscastillo/factorial-impuestos
+
+output:
+  bookdown::html_document2:
+      css: "custom.css"
+      theme: flatly
+
+#output:
+#  html_document:
+#    css: "../input/css/custom.css"
+#    theme: flatly
+
+    

@@ -1,0 +1,665 @@
+---
+title: "Data preparation: Pilot study - Facebook"
+date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
+css: "../input/css/custom.css"
+output:
+  bookdown::html_document2:
+    number_sections: true
+    toc: true
+    toc_float:
+      collapsed: false
+      toc_depth: 2
+    code_folding: "hide"
+editor_options:
+  chunk_output_type: console
+---
+
+```{r eval=FALSE, include=FALSE}
+rmarkdown::render(input = "production/prod_prep-data.Rmd",
+                  output_format = "all",
+                  output_dir = "production/");browseURL(url = "production/prod_prep-data.html")
+```
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,message = FALSE, cache = TRUE,results = "hold")
+knitr::opts_knit$set(root.dir = "../")
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+Sys.setlocale("LC_MESSAGES", 'es_CL.UTF-8')
+Sys.setenv(LANG = "es_CL.UTF-8")
+```
+
+
+```{r include=FALSE}
+colorize <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color, 
+      x)
+  } else x
+}
+```
+
+
+load packages
+```{r}
+library(sjlabelled)
+library(stringr)
+library(stringi)
+library(dplyr)
+library(datasets)
+library(data.table)
+library(tidyr)
+library(summarytools)
+library(sjPlot)
+library(stargazer)
+library(knitr)
+library(tidyverse)
+library(mice)
+library(texreg)
+library(lme4)
+library(sessioninfo) 
+```
+
+
+# Data preparation
+
+```{r}
+data01 <- read_spss(path = "input/data/original/factorial_mod-v02_June.sav")
+load(file = "input/data/proc/vig_dim.RData")
+```
+
+Fieldwork date: `r format(min(data01$StartDate),format='%d %B %Y') ` to `r format(max(data01$EndDate),format='%d %B %Y')`
+
+## Filter data  
+
+**Criterios** 
+
+<!-- * Finished==1 -->
+
+<!-- * Progress==100 -->
+
+* Sujetos que Aceptaron participar en el estudio (consen = 1)
+* Sujetos que respondieron pregunta sobre "lo que Ud. entiende por impuesto a la renta:" 
+
+```{r}
+# data01 <- data01 %>% filter(Finished==1,Progress==100,!is.na(Q5231))
+data01 <- data01 %>% filter(consen==1,!is.na(Q5231))
+# data01 <- data01 %>% filter(consen==1,!is.na(Q5231))
+
+deck_cod01<- c("FL_431_DO_","FL_446_DO_","FL_467_DO_","FL_481_DO_","FL_494_DO_",
+               "FL_507_DO_","FL_520_DO_","FL_533_DO_","FL_546_DO_","FL_559_DO_")
+
+decks01<- data01 %>% select(ResponseId,"finished"=Finished,
+                            starts_with("p_a_"),
+                            starts_with("p_b_"),
+                            matches(paste(deck_cod01, collapse="|")))
+
+for (i in deck_cod01) {
+  names(decks01) <- names(decks01) %>% str_replace_all(pattern = i,replacement = "deck_vig") 
+}
+
+decks01<- remove_label(decks01)
+```
+
+> La mediana de duración del cuestionario es **`r colorize(paste0(round(median(data01$Duration__in_seconds_/60),2)," minutos"),"red")` **  
+
+
+```{r}
+tiempo<- data01 %>% filter(Finished==1,Progress==100,!is.na(Q5231)) %>%
+  select(Duration__in_seconds_) %>% summarise(tiempo=median(Duration__in_seconds_/60))
+```
+
+> Excluyendo las respuestas incompletas (finished= 0) la mediana de duración del cuestionario es **`r colorize(paste0(round(tiempo,2)," minutos"),"red")` **  
+
+
+* Seleccionamos las variables que identifican la viñeta y el deck al que pertenece.
+
+```{r}
+nam01<- decks01 %>% select(starts_with("deck_vig")) %>% names()
+decks02 <- data.frame(!(is.na(decks01[nam01])));decks02[decks02==FALSE] <- NA
+decks03 <- bind_cols(select(decks01,-nam01),decks02)
+
+w <- which(decks03=="TRUE",arr.ind=TRUE)
+decks03[w] <- names(decks03)[w[,"col"]]
+```
+
+> Agregar dummy para termina/no-termina el cuestionario.
+
+# Base de datos de wide a long
+
+```{r}
+wide <- setDT(decks03)
+
+long01<- melt(wide, id.vars = "ResponseId",
+              variable.name = "wave",
+              measure = patterns("^p_a_","^p_b_","deck_vig"),
+              value.name = c("taxperc","taxjust","deck_vig"));long01$wave <- NULL
+long01 <- na.omit(long01)
+long01$deck_vig  <- str_replace_all(long01$deck_vig,pattern = "deck_vig",replacement = "")
+```
+
+# Recode variables de impuesto percibido y justo
+
+```{r}
+long01$taxperc <- stri_replace_all(long01$taxperc, "", fixed=c("$")) #delete $ symbol
+long01$taxperc <- stri_replace_all(long01$taxperc, "", fixed=c(".")) #delete . 
+long01$taxperc <- as.numeric(long01$taxperc) # transform to numeric
+# summary(long01$taxperc) 
+                 
+long01$taxjust <- stri_replace_all(long01$taxjust, "", fixed=c("$")) #delete $ symbol
+long01$taxjust <- stri_replace_all(long01$taxjust, "", fixed=c(".")) #delete . 
+long01$taxjust <- as.numeric(long01$taxjust) # transform to numeric
+# summary(long01$taxjust) 
+```
+
+
+```{r, results='asis'}
+stargazer(x = long01,type = "html",median = T,digits = 0, title = "<caption>(#tab:des01) Descriptivos</caption> ")
+```
+
+
+## Merge respondentes y viñetas
+
+A) Pegar sociodemograficos de respondente a base long.
+
+```{r}
+long02<- left_join(long01,data01[,c("ResponseId","Finished","sexo","edad","educ","ingresos","act_prin","comuna")])      
+```
+
+B) Nombrar variables nivel respondente  
+
+```{r}
+long02<- long02 %>% rename("respondeid"=ResponseId,"sexo.re"=sexo,"edad.re"=edad,"educ.re"=educ, "ingresos.re" =ingresos, "estlab.re"=act_prin,"finished"=Finished) 
+```
+
+C) Nombrar variables de nivel viñeta (generadas en SAS)
+
+```{r}
+vig_dat<- vig_dat %>% rename("sexo.vig"=sexo,
+                             "apellido.vig"=apellido,
+                             "edad.vig"=edad,
+                             "nse_ori.vig"="nivel_socioeconómico_de_origen",
+                             "educ.vig"=nivel_educativo,
+                             "necesidades.vig"=necesidades,
+                             "educ_madre.vig"="educación_de_la_madre", 
+                             "ingresos.vig"=ingresos)
+```
+
+D) Merge datos de viñetas a base long (nivel respondente + viñetas)
+
+```{r}
+vig_resp<- left_join(long02,vig_dat,by =c("deck_vig"))  %>% select(respondeid,deck,id,deck_vig,everything(),-p1)  
+```
+
+# Etiquetado variables
+
+## Etiqueta nombre de variables 
+
+```{r}
+vig_resp <- vig_resp %>% var_labels(respondeid = "Id Respondent",
+                                    finished="Finished survey",
+                                    deck = "Id Deck",
+                                    id = "Id Vignette",
+                                    deck_vig = "Id deck and vignette",
+                                    taxperc = "Perceived income tax",
+                                    taxjust = "Just income tax",
+                                    sexo.re = "Gender (respondent level)",
+                                    edad.re = "Age (respondent level)",
+                                    educ.re = "Education (respondent level)",
+                                    ingresos.re = "Income in CLP (respondent level)",
+                                    estlab.re = "Job status (respondent level)",
+                                    comuna = "Comuna (respondent level)",
+                                    sexo.vig = "Gender (vignette level)",
+                                    apellido.vig = "Etnicity - surname (vignette level)",
+                                    edad.vig = "Age (vignette level)",
+                                    nse_ori.vig = "SES of origin (vignette level)",
+                                    educ.vig = "Education (vignette level)",
+                                    necesidades.vig = "Needs - number of children (vignette level)",
+                                    educ_madre.vig = "Mother's education level (vignette level)",
+                                    ingresos.vig = "Income in CLP (vignette level)")
+
+```
+
+## Etiquetado valores de variable 
+
+```{r}
+lb.vig_resp <- get_labels(vig_resp)
+```
+
+```{r vignette}
+vig_resp$sexo.vig       <- set_labels(vig_resp$sexo.vig       ,labels = c("Male"=1,"Female"=2))
+vig_resp$apellido.vig   <- set_labels(vig_resp$apellido.vig   ,labels = c("Spanish"=1,"Basque-Castilian"=2,"European"=3,"Indigenous"=4))
+vig_resp$edad.vig       <- set_labels(vig_resp$edad.vig       ,labels = c("35 years"=1,"45 years"=2,"55 years"=3))
+vig_resp$nse_ori.vig    <- set_labels(vig_resp$nse_ori.vig    ,labels = c("Public"=1,"Charter"=2,"Private"=3))
+vig_resp$educ.vig       <- set_labels(vig_resp$educ.vig       ,labels = c("Complete basic education"=1,"Complete secondary education"=2,
+                                                                          "Technical professional education"=3,"Full university education"=4,"Graduate Studies"=5))
+vig_resp$necesidades.vig<- set_labels(vig_resp$necesidades.vig,labels = c("Do not have children"=1,"Has 1 child"=2,"Has 2 children"=3,"Has 5 children"=4))
+vig_resp$educ_madre.vig <- set_labels(vig_resp$educ_madre.vig ,labels = c("Complete basic education"=1,"Complete secondary education"=2,
+                                                                          "Technical professional education"=3,"Full university education"=4,"Graduate Studies"=5))
+vig_resp$ingresos.vig   <- set_labels(vig_resp$ingresos.vig   ,labels = c("$320.500"=1,"$655.000"=2,"$1.200.000"=3,"$2.500.000"=4,"$4.300.000"=5))
+```
+
+```{r respondent}
+vig_resp$sexo.re <- set_labels(x = vig_resp$sexo.re, labels = c("Man"=1,"Woman"=2))
+vig_resp$educ.re <- set_labels(x = vig_resp$educ.re,
+                               labels = c("No formal education"=1,
+                                          "Primary education incomplete"=2,
+                                          "Complete primary education"=3,
+                                          "Incomplete secondary education"=4,
+                                          "Complete secondary education"=5,
+                                          "Non-university higher education incomplete"=6,
+                                          "Complete non-university higher education"=7,
+                                          "Incomplete college education"=8,
+                                          "Complete college education"=9,
+                                          "Postgraduate studies, master's, doctoral"=10)) 
+
+vig_resp$estlab.re <- set_labels(vig_resp$estlab.re,
+                                 labels = c(
+                                   "Working for pay full-time" = 1,
+                                   "Working for pay part-time or do odd jobs" = 2,
+                                   "Study and work" = 3,
+                                   "Just study" = 4,
+                                   "Retired or pensioned" = 5,
+                                   "Unemployed, looking for work" = 6,
+                                   "Performs unpaid work (household chores, babysitting and others)" = 7,
+                                   "It is ill or has a disability" = 8,
+                                   "Not studying, not working and not looking for work" = 9))
+
+
+vig_resp$ingresos.re <- set_labels(vig_resp$ingresos.re,
+                                   labels =    c("Less than $35.000 monthly disposable income" = 1 ,
+                                                 "From $35.001  to $56.000 monthly disposable income" = 2 ,
+                                                 "From $56.001  to $78.000 monthly disposable income" = 3 ,
+                                                 "From $78.001  to $101.000 monthly disposable income" = 4 ,
+                                                 "From $101.001 to $134.000 monthly disposable income" = 5 ,
+                                                 "From $134.001 to $179.000 monthly disposable income" = 6 ,
+                                                 "From $179.001 to $224.000 monthly disposable income" = 7 ,
+                                                 "From $224.001 to $291.000 monthly disposable income" = 8 ,
+                                                 "From $291.001 to $358.000 monthly disposable income" = 9 ,
+                                                 "From $358.001 to $448.000 monthly disposable income" = 10,
+                                                 "From $448.001 to $1.000.000 monthly disposable incomes" = 11,
+                                                 "From $1.000.001 to $2.000.000 monthly disposable income" = 12,
+                                                 "From $2.000.001 to $3.000.000 monthly disposable income" = 13,
+                                                 "More than $3.000.000 monthly disposable income" = 14))
+```
+
+```{r eval=FALSE, include=FALSE}
+sjPlot::view_df(vig_resp,show.frq = T, show.prc = T, show.na = T)
+```
+
+# Explorar datos
+
+```{r eval=FALSE, include=FALSE}
+psych::describeBy(x = vig_resp$taxperc,group =vig_resp$finished,mat = T) %>% select(finished=group1,n,mean,median,sd,min,max)
+psych::describeBy(x = vig_resp$taxjust,group =vig_resp$finished,mat = T) %>% select(finished=group1,n,mean,median,sd,min,max)
+```
+
+## Patrón de respuesta de $0
+
+* Exploramos el patrón de respuesta para valores $0 en variables de impuestos (`taxperc` y `taxjust`)
+
+|**Dimensiones**|**Operacionalización**|**Niveles**  | 
+|--------------|-------------------|-----------------|
+|**Ingresos**  |Ingresos mensuales |**1.** $320.500  | 
+|              |                   |**2.** $655.000  |
+|              |                   |**3.** $1.200.000|
+|              |                   |**4.** $2.500.000|
+|              |                   |**5.** $4.300.000|
+Table: `r as.character("(\\#tab:tab-model-table) Ingresos de Viñeta")`
+
+
+```{r, out.width=c('50%','50%'),fig.show='hold'}
+plot_scatter(x =ingresos.vig,
+             y = taxperc,data = filter(vig_resp,taxperc==0),title = "Distribución de $0 en taxperc según ingresos de viñeta")
+
+plot_scatter(x =ingresos.vig,
+             y = taxjust,data = filter(vig_resp,taxjust==0),title = "Distribución de $0 en taxjust según ingresos de viñeta")
+```
+
+* Vemos que tanto para `taxperc` y `taxjust` la concentración de respuestas $0 se encuentra en los niveles de ingreso 1 y 2.
+* Según el SII el impuesto a la renta aplica para aquellos que perciben ingresos superiores a 13,5 ($`r 50.372*13.5`CLP) UTM. 
+
+
+```{r}
+tab.pat <- vig_resp %>% group_by(respondeid) %>% summarise(mean_taxperc=mean(x = taxperc,na.rm = T),
+                                                           mean_taxjust=mean(x = taxjust,na.rm = T)) %>% arrange(mean_taxperc) %>% arrange(mean_taxjust)
+
+n<- tab.pat %>% filter(mean_taxperc==0 & mean_taxjust==0)
+
+tab.pat %>% filter(mean_taxperc==0 | mean_taxjust==0)
+```
+
+* Vemos que solamente hay `r dim(n)[1]` sujetos que responde $0 en `taxperc` y `taxjust`
+* se puede observar que existen respondentes que poseen media 0 en sus respuestas de `taxjust`, lo que se interpreta como que en las 12 viñetas evaluadas respondieron $0.
+
+<!-- * PENDIENTE: decidir qué se hace con estos casos (excluir?) -->
+
+> **NOTA** se excluyen el(los) caso(s) que responde $0 en `taxperc` y `taxjust` para todas las viñetas 
+
+```{r}
+tab.pat <- tab.pat %>% filter(mean_taxperc==0 & mean_taxjust==0)
+
+vig_resp <- vig_resp %>% filter(!(respondeid %in% tab.pat$respondeid))  
+```
+
+```{r}
+kable(rbind(taxperc= quantile(long01$taxperc, probs = c(0.90,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,1.00),na.rm = T),
+            taxjust= quantile(long01$taxjust, probs = c(0.90,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,1.00),na.rm = T)),
+      caption = "Percentiles 90 a 100 para taxper y taxjust")
+```
+
+## Revisar Patron de NA dentro de viñetas 
+
+```{r}
+tax_na_wvig<- vig_resp %>% group_by(respondeid, deck,id,deck_vig) %>% summarise(taxperc_na=sum(is.na(taxperc)),taxjust_na=sum(is.na(taxjust)))  %>% ungroup()
+tax_na_wvig$id_vig_deck <- paste0("d",str_pad(tax_na_wvig$deck, 2, pad = "0"),"v",str_pad(tax_na_wvig$id, 2, pad = "0"))
+```
+
+```{r}
+n_mis_tax<- tax_na_wvig %>% group_by(id_vig_deck) %>% summarise(n_taxperc=sum(taxperc_na),n_taxjust=sum(taxjust_na))
+```
+
+```{r, fig.width=18, fig.cap="Missing en tax percibido"}
+# plot_scatter(data = n_mis_tax,x = id_vig_deck,y = n_taxperc,title = "Missing en tax percibido") +theme(axis.text.x = element_text(angle = 90))
+ggplot(data = n_mis_tax,aes(x = id_vig_deck,y = n_taxperc)) +
+  geom_bar(stat = "identity") +
+  # scale_y_continuous(breaks = c(0,1,2)) +
+  labs(title = "Missing en tax percibido",
+       subtitle = "Análisis incluye casos que no terminaron el cuestionario")+
+  xlab(label = NULL)+
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r, fig.width=18, fig.cap="Missing en tax justo"}
+# plot_scatter(data = n_mis_tax,x = id_vig_deck,y = n_taxjust,title = "Missing en tax justo") + theme(axis.text.x = element_text(angle = 90))
+ggplot(data = n_mis_tax,aes(x = id_vig_deck,y = n_taxjust)) +
+  geom_bar(stat = "identity") +
+  # scale_y_continuous(breaks = c(0,1,2)) +
+  labs(title = "Missing en tax justo",
+       subtitle = "Análisis incluye casos que no terminaron el cuestionario")+
+  xlab(label = NULL)+
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+> **Nota**: A nivel descriptivo no parece haber un marcado de NA asociado a viñetas. No obstante es importante ver que las viñetas con mayor cantidad de missing son las del deck 02 y 08. 
+
+## Revisar Patron de NA de viñetas within sujetos
+
+```{r}
+tab_na<- tax_na_wvig %>% filter(taxperc_na >0 | taxjust_na >0)
+tab_na
+```
+
+* Seleccionamos los sujetos que tienen missing en al menos 1 de las variables de impuestos
+
+```{r}
+tab_na_gt0 <- tab_na %>% group_by(respondeid) %>% summarise(n_taxperc_na=sum(taxperc_na),n_taxjust_na=sum(taxjust_na)) %>% arrange(n_taxperc_na,n_taxjust_na)
+n2<- tab_na_gt0 %>% filter(n_taxperc_na>=5 | n_taxjust_na>=5) %>% dim()
+```
+
+> **Nota**: Existen **`r n2[1]` respondentes** que tienen 5 o más missing en `taxperc` o `taxjust`
+
+```{r}
+idresp_gt5 <- tab_na_gt0 %>% filter(n_taxperc_na>=5 | n_taxjust_na>=5)
+idresp_gt5
+```
+
+> **Nota**: Se excluyen de la muestra aquellos sujetos que tienen 5 o más missing en `taxperc` o `taxjust`
+
+```{r eval=FALSE, include=FALSE}
+vig_resp <- vig_resp %>% filter(!(respondeid %in% idresp_gt5$respondeid))
+```
+
+## Modelos para respuesta $0
+
+### logit  
+
+* Creamos la variable dummy donde 1= "sujeto responde 0" y 0 = "sujeto responde != 0"
+
+```{r}
+vig_resp$pertax.0 <- ifelse(test = vig_resp$taxperc==0,yes = 1,no = 0) 
+vig_resp$pertax.0 <- as.factor(vig_resp$pertax.0)
+summary(vig_resp$pertax.0)
+```
+
+```{r}
+vig_resp$justax.0 <- ifelse(test = vig_resp$taxjust==0,yes = 1,no = 0) 
+vig_resp$justax.0 <- as.factor(vig_resp$justax.0)
+summary(vig_resp$justax.0)
+```
+
+```{r}
+vig_resp<-  vig_resp %>% var_labels(justax.0 = "Response $0 | Just income tax",
+                                    pertax.0  ="Response $0 | Perceived incom tax")
+```
+
+
+```{r}
+# vig_resp<- vig_resp %>% filter(!(is.na(pertax.0)) | !(is.na(justax.0)))
+```
+
+```{r}
+m01 <- glm(pertax.0~1+sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+respondeid+finished,data = vig_resp,family=binomial(link= "logit"))
+m02 <- glm(justax.0~1+sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+respondeid+finished,data = vig_resp,family=binomial(link= "logit")) 
+```
+
+<!-- * **Revisar**: [complete separation in logistic regression](https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faqwhat-is-complete-or-quasi-complete-separation-in-logistic-regression-and-what-are-some-strategies-to-deal-with-the-issue/#:~:text=A%20complete%20separation%20in%20a,separates%20a%20predictor%20variable%20completely.&text=In%20terms%20of%20predicted%20probabilities,need%20for%20estimating%20a%20model.) -->
+
+
+```{r echo=TRUE, results='asis'}
+texreg::htmlreg(l = list(m01,m02),omit.coef = "respondeid",custom.model.names = c("pertax.0","justax.0"),
+                caption = "(\\#tab:tab-logit01) Regresion logística", 
+                doctype = F, caption.above = T,
+                custom.note = "Efectos fijos por id respondente; *** p < 0.001, ** p < 0.01, * p < 0.05")
+```
+
+* Se omiten los coeficientes para cada `respondeid`
+
+### logit (multinivel)
+
+```{r}
+m01.me <- glmer(pertax.0~1 + (1|respondeid),data = vig_resp,family = "binomial")
+m02.me <- glmer(justax.0~1 + (1|respondeid),data = vig_resp,family = "binomial")
+```
+
+```{r results='asis'}
+htmlreg(list(m01.me,m02.me),
+        custom.model.names = c("pertax.0","justax.0"),
+        caption = "(\\#tab:tab-logit02) Modelos de regresión logística multinivel (nulos)",
+        doctype = F, caption.above = T)
+```
+
+* Calculamos la ICC usando el método de variable latente: donde $\pi^2/3$ = `r 3.14^2/3`
+
+```{r}
+pi2_3<- (3.14^2)/3
+tau2.1<- m01.me@theta^2 #tau2 variance random intercept
+tau2.2<- m02.me@theta^2 #tau2 variance random intercept
+
+icc01 <- tau2.1/(tau2.1+pi2_3) #icc taxperc
+icc02 <- tau2.2/(tau2.2+pi2_3) #icc taxjust
+
+kable(rbind("taxperc"=icc01,"taxjust"=icc02),col.names = c("ICC"),digits = 3,caption = "Intra-class correlation")
+```
+
+#### Estimación modelos de intercepto aleatorio para $0 en`taxperc` y `taxjust` 
+
+```{r, cache=TRUE}
+m03.me   <- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig +(1|respondeid),data = vig_resp,family = "binomial")
+m03.me.1 <- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig +(1|respondeid),data = vig_resp,family = "binomial")
+m03.me.2 <- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+educ.re + (1 |respondeid),data = vig_resp,family = "binomial")
+m03.me.3 <- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig*educ.re + (1 + ingresos.vig |respondeid),data = vig_resp,family = "binomial")
+
+m04.me   <- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ (1 | respondeid),data = vig_resp, family = "binomial")
+m04.me.1 <- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig  + (1 | respondeid),data = vig_resp, family = "binomial")
+m04.me.2 <- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+educ.re + (1 | respondeid),data = vig_resp, family = "binomial")
+m04.me.3 <- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig*educ.re + (1+ingresos.vig | respondeid),data = vig_resp, family = "binomial")
+```
+
+```{r eval=FALSE, include=FALSE}
+screenreg(list(m03.me,m03.me.1,m03.me.2,m03.me.3,m04.me,m04.me.1,m04.me.2,m04.me.3),
+          custom.model.names = c("pertax.0","pertax.0","pertax.0","justax.0","justax.0","justax.0"),
+          single.row = T)
+```
+
+```{r results='asis'}
+htmlreg(list(m03.me,m03.me.1,m03.me.2,m03.me.3,m04.me,m04.me.1,m04.me.2,m04.me.3),
+        custom.model.names = c("pertax.0","pertax.0","pertax.0","pertax.0","justax.0","justax.0","justax.0","justax.0"), 
+        single.row = F,
+        doctype = F,
+        caption = "(\\#tab:tab-glm01) Modelos de regresión logística multinivel", 
+        caption.above = T)
+```
+
+> Vemos que el ingreso de la viñeta se asocia negativa y estadísticamente significativa con responder $0.
+
+
+```{r, fig.height=10,fig.width=10, fig.cap="Resultados para tax percibido"}
+plot01<- plot_model(m03.me.3,title = "Modelo logit multinivel con interacción - tax percibido")
+plot01.int<- plot_model(m03.me.3,type = "int", title = "Ingreso (vig) x Educación (res) - tax percibido ") +theme(legend.position = "bottom")
+
+plot_grid(list(plot01, plot01.int), tags = TRUE,margin = c(0.5,0.5,0.5,0.5))
+```
+
+> La asociación negativa del ingreso de la viñeta es moderado negativamente por la educación del respondente. 
+
+
+# Calcular variables de impuestos
+
+## Distribución
+
+```{r, out.width=c('50%','50%'),fig.show='hold'}
+sjPlot::plot_frq(data = vig_resp$taxperc,type = "histogram")
+sjPlot::plot_frq(data = vig_resp$taxjust,type = "histogram")
+```
+
+**Debido al sesgo presentado en los gráficos, revisamos los valores de la distribución del 5% superior para identificar posibles outliers en la parte alta**
+
+```{r}
+kable(rbind(taxperc= quantile(long01$taxperc, probs =seq(0.95, 1, by = 0.005),na.rm = T),
+            taxjust= quantile(long01$taxjust, probs =seq(0.95, 1, by = 0.005),na.rm = T)),
+      caption = "Percentiles 95 a 100 para taxper y taxjust") %>% kable_styling(font_size = 12,full_width = F)
+```
+
+**Tenemos que el Percentil 97.5 (equivalente al 2.5% superior) para taxperc es `r quantile(vig_resp$taxperc,probs = c(0.975),na.rm = T)[1]` y para taxjust es `r quantile(vig_resp$taxjust,probs = c(0.975),na.rm = T)[1]`. Exploramos visualmente la distribución de las respuestas, excluyendo los valores que sean mayores al percentil 97.5:**
+
+```{r}
+vig_resp$taxperc.rec <- vig_resp$taxperc
+vig_resp$taxjust.rec <- vig_resp$taxjust
+vig_resp$taxperc.rec <- ifelse(vig_resp$taxperc.rec<=1855000,yes = vig_resp$taxperc.rec,no = NA)
+vig_resp$taxjust.rec <- ifelse(vig_resp$taxjust.rec<=1290000,yes = vig_resp$taxjust.rec,no = NA)
+vig_resp$taxperc.rec <-set_label(vig_resp$taxperc.rec,"Perceived income tax (P97.5)")
+vig_resp$taxjust.rec <-set_label(vig_resp$taxjust.rec,"Just income tax (P97.5)")
+```
+
+```{r, fig.height=3, fig.width=12,fig.show='hold'}
+plot_frq(data = vig_resp$taxperc.rec,type = "box")+ 
+  coord_flip()
+plot_frq(data = vig_resp$taxjust.rec,type = "box")+  
+  coord_flip()
+```
+
+```{r, fig.width=12,fig.height=4,fig.show='hold'}
+nota <- "Nota: se excluyen valores mayores al P97.5"
+sjPlot::plot_frq(data = vig_resp$taxperc.rec,type = "histogram",show.mean = T)+labs(caption = nota)
+sjPlot::plot_frq(data = vig_resp$taxjust.rec,type = "histogram",show.mean = T)+labs(caption = nota)
+```
+
+
+<div class = "row">
+<div class = "col-md-6">
+```{r}
+sjmisc::frq(vig_resp$taxperc==0,title = "Cantidad de respuestas $0 en taxperc")
+```
+</div>
+  
+<div class = "col-md-6">
+```{r}
+sjmisc::frq(vig_resp$taxjust==0,title = "Cantidad de respuestas $0 en taxjust") 
+```
+</div>
+</div>
+
+Vemos que en el caso de `taxpec`, las respuestas $0 son un 26,32%, mientras que en `taxjust` son un un 37,57%. Como vimos anteriormente en los modelos regresión, las respuesta no son independientes de los ingresos de la viñeta. Por tanto, se recomienda mantener estos valores. 
+
+<style>
+div.blue { background-color:#98FB98; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Decisión:**  Finalmente filtramos y excluimos los valores en parte superior de ambas variables equivalentes a `taxperc < 1855000 & taxjust< 1290000`
+
+</div>
+
+```{r}
+vig_resp <- vig_resp %>% filter(taxperc < 1855000 & taxjust< 1290000)
+```
+
+
+## Alternativa A: incluye $0
+
+Realizamos la transformación en escala logarítmica sobre taxperc y taxjust, **manteniendo las respuestas $0**:
+
+```{r}
+vig_resp$taxperc.ln<- log(vig_resp$taxperc+(min(vig_resp$taxperc,na.rm = T)+1))
+set_label(vig_resp$taxperc.ln) <- "ln(perceived tax) - include $0"
+
+vig_resp$taxjust.ln<- log(vig_resp$taxjust+(min(vig_resp$taxjust,na.rm = T)+1))
+set_label(vig_resp$taxjust.ln) <- "ln(just tax) - include $0"
+```
+
+```{r, out.width=c('50%','50%'),fig.show='hold'}
+sjPlot::plot_frq(data = vig_resp$taxperc.ln,type = "histogram",show.mean = T)
+sjPlot::plot_frq(data = vig_resp$taxjust.ln,type = "histogram",show.mean = T)
+```
+
+## Alternativa B: excluye $0
+
+Realizamos la transformación en escala logarítmica sobre taxperc y taxjust, **excluyendo las respuestas $0**:
+
+```{r}
+vig_resp$taxperc.b <- vig_resp$taxperc 
+vig_resp$taxperc.b[vig_resp$taxperc.b==0] <- NA
+vig_resp$taxperc.ln2<- log(vig_resp$taxperc.b+(min(vig_resp$taxperc.b,na.rm = T)+1));vig_resp$taxperc.b=NULL
+set_label(vig_resp$taxperc.ln2) <- "ln(perceived tax) - exclude $0"
+```
+
+```{r}
+vig_resp$taxjust.b <- vig_resp$taxjust
+vig_resp$taxjust.b[vig_resp$taxjust.b==0] <- NA
+vig_resp$taxjust.ln2<- log(vig_resp$taxjust.b+(min(vig_resp$taxjust.b,na.rm = T)+1));vig_resp$taxjust.b=NULL
+set_label(vig_resp$taxjust.ln2) <- "ln(just tax) - exclude $0"
+```
+
+```{r, out.width=c('50%','50%'),fig.show='hold'}
+sjPlot::plot_frq(data = vig_resp$taxperc.ln2,type = "histogram",show.mean = T)
+sjPlot::plot_frq(data = vig_resp$taxjust.ln2,type = "histogram",show.mean = T)
+```
+
+```{r eval=FALSE, include=FALSE}
+lm01<- lmer(taxperc.ln2~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ (1 | respondeid),data = vig_resp)
+summary(lm01)
+```
+
+
+# General descriptives
+
+```{r}
+print(dfSummary(vig_resp, headings = FALSE), method = "render")
+```
+
+# Save data
+
+```{r}
+save(vig_resp,file = "input/data/proc/vig_resp-a.RData")
+```
+
+# Session info
+
+```{r}
+sessioninfo::session_info()
+```
+

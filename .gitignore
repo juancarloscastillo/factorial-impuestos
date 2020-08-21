@@ -1,0 +1,8 @@
+
+
+docs/paper_cache/*
+docs/prod_gen-vig_cache/*
+docs/prod_analysis_cache/*
+docs/prod_prep-data-a_cache/*
+docs/prod_prep-data-b_cache/*
+

@@ -1,0 +1,49 @@
+---
+title: " "
+csl: "../input/bib/apa6.csl"
+bibliography: "../input/bib/zlibrary.bib"
+author: " "
+output:
+    bookdown::html_document2:
+        number_sections: FALSE
+        smart: false
+        includes:
+          in_header: head_github-activity.html
+css: "../input/css/custom.css"
+---
+
+## This is the project website for the development and testing of the "Perceived an Just Taxes in Chile: A factorial survey approach"
+
+Last update: `r format(Sys.time(), "%A %d %B %Y %X")`
+
+### Authors:
+
+- Juan Carlos Castillo, Departamento de Sociología, Universidad de Chile. [juancastillov@uchile.cl](juancastillov@uchile.cl), [jc-castillo.com](http://jc-castillo.com/)
+
+### In brief:
+
+Based on a factorial survey approach, the proposed study design aims answer how the characteristics of a set of vignettes affect the evaluations in relation to the perceived and just income taxes in Chile. Based on a longitudinal two-wave online panel in Chile (N=1800, final wave) we tested our hypothesis through multilevel regression models in which vignettes are nested within respondents.  
+
+- Pre-analysis: [OSF pre-register]
+
+### Structure of the project website:
+
+- The tabs follow the logic of the [IPO protocol](https://github.com/juancarloscastillo/ipo) for academic workflows, based on three main components = **I**nput -> **P**roduction -> **O**utput. Here we show only one the main parts of each component: Data -> Analysis -> Paper. The complete reproducible files are in the [Github repo: https://github.com/juancarloscastillo/factorial-impuestos](https://github.com/juancarloscastillo/factorial-impuestos)
+
+  - _Data_: pre-processing and general descriptives
+  - _Analysis_: Analysis
+  - _Paper_: final output
+
+### Reproducibility and documentation
+
+The repository of the project in Github is structured according to the [IPO reproducibility protocol](https://juancarloscastillo.github.io/ipo/).
+
+<br>
+
+## [Github activity feed](https://github.com/juancarloscastillo/github-activity)
+
+<div id="feed"></div>
+
+<br>
+
+## References

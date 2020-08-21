@@ -1,0 +1,3277 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data preparation: Pilot study - Netquest</title>
+
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Factorial Survey: Perceived and Just taxes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="prod_gen-vig.html">Vignette generation</a>
+    </li>
+    <li>
+      <a href="prod_prep-data-a.html">Data preparation A</a>
+    </li>
+    <li>
+      <a href="prod_prep-data-b.html">Data preparation B</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="prod_analysis.html">Analysis</a>
+</li>
+<li>
+  <a href="paper.html">Paper</a>
+</li>
+<li>
+  <a href="paper.pdf">
+    <span class="fa fa-file-pdf"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://github.com/juancarloscastillo/factorial-impuestos">
+    <span class="fa fa-github fa-lg"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Data preparation: Pilot study - Netquest</h1>
+<h4 class="date">viernes 21 agosto 2020 19:26:54</h4>
+
+</div>
+
+
+<p>load packages</p>
+<pre class="r"><code>library(sjlabelled)
+library(stringr)
+library(stringi)
+library(dplyr)
+library(datasets)
+library(data.table)
+library(tidyr)
+library(summarytools)
+library(sjPlot)
+library(stargazer)
+library(knitr)
+library(tidyverse)
+library(mice)
+library(texreg)
+library(lme4)
+library(sessioninfo) </code></pre>
+<div id="data-preparation" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Data preparation</h1>
+<pre class="r"><code>data01 &lt;- read_spss(path = &quot;input/data/original/factorial_mod-v01_august.sav&quot;)
+load(file = &quot;input/data/proc/vig_dim.RData&quot;)
+data01 &lt;- data01 %&gt;% filter(StartDate&gt;min(data01$StartDate)) # remove cases out of fieldwork date</code></pre>
+<p>Fieldwork date: 13 agosto 2020 to 18 agosto 2020</p>
+<div id="filter-data" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Filter data</h2>
+<p><strong>Criterios</strong></p>
+<!-- * Finished==1 -->
+<!-- * Progress==100 -->
+<ul>
+<li>Sujetos que Aceptaron participar en el estudio (consen = 1)</li>
+<li>Sujetos que respondieron pregunta sobre “lo que Ud. entiende por impuesto a la renta:”</li>
+</ul>
+<pre class="r"><code># data01 &lt;- data01 %&gt;% filter(Finished==1,Progress==100,!is.na(Q5231))
+data01 &lt;- data01 %&gt;% filter(consen==1,!is.na(Q5231))
+# data01 &lt;- data01 %&gt;% filter(consen==1,!is.na(Q5231))
+
+# deck_cod01&lt;- c(&quot;FL_431_DO_&quot;,&quot;FL_446_DO_&quot;,&quot;FL_467_DO_&quot;,&quot;FL_481_DO_&quot;,&quot;FL_494_DO_&quot;,
+#                &quot;FL_507_DO_&quot;,&quot;FL_520_DO_&quot;,&quot;FL_533_DO_&quot;,&quot;FL_546_DO_&quot;,&quot;FL_559_DO_&quot;)
+# 
+# decks01&lt;- data01 %&gt;% select(ResponseId,&quot;finished&quot;=Finished,
+#                             starts_with(&quot;p_a_&quot;),
+#                             starts_with(&quot;p_b_&quot;),
+#                             matches(paste(deck_cod01, collapse=&quot;|&quot;)))
+# 
+# for (i in deck_cod01) {
+#   names(decks01) &lt;- names(decks01) %&gt;% str_replace_all(pattern = i,replacement = &quot;deck_vig&quot;) 
+# }
+# 
+# decks01&lt;- remove_label(decks01)
+deck_cod01&lt;- c(&quot;FL_191_DO_&quot;,&quot;FL_193_DO_&quot;, # deck01
+               &quot;FL_176_DO_&quot;,&quot;FL_178_DO_&quot;, # deck02
+               &quot;FL_161_DO_&quot;,&quot;FL_163_DO_&quot;, # deck03
+               &quot;FL_146_DO_&quot;,&quot;FL_148_DO_&quot;, # deck04
+               &quot;FL_131_DO_&quot;,&quot;FL_133_DO_&quot;, # deck05
+               &quot;FL_116_DO_&quot;,&quot;FL_118_DO_&quot;, # deck06
+               &quot;FL_101_DO_&quot;,&quot;FL_103_DO_&quot;,   # deck07
+               &quot;FL_86_DO_&quot;,&quot;FL_88_DO_&quot;,   # deck08
+               &quot;FL_71_DO_&quot;,&quot;FL_73_DO_&quot;,   # deck09
+               &quot;FL_56_DO_&quot;,&quot;FL_58_DO_&quot;)   # deck10
+  
+decks01&lt;- data01 %&gt;% select(ResponseId,&quot;finished&quot;=Finished,
+                            starts_with(&quot;p_a_&quot;),
+                            starts_with(&quot;p_b_&quot;),
+                            matches(paste(deck_cod01, collapse=&quot;|&quot;)))
+
+
+
+
+for (i in deck_cod01) {
+  names(decks01) &lt;- names(decks01) %&gt;% str_replace_all(pattern = i,replacement = &quot;deck_vig&quot;) 
+}
+
+decks01&lt;- remove_label(decks01)</code></pre>
+<blockquote>
+<p>La mediana de duración del cuestionario es <strong><span style="color: red;">17.79 minutos</span> </strong></p>
+</blockquote>
+<pre class="r"><code>tiempo&lt;- data01 %&gt;% filter(Finished==1,Progress==100,!is.na(Q5231)) %&gt;%
+  select(Duration__in_seconds_) %&gt;% summarise(tiempo=median(Duration__in_seconds_/60))</code></pre>
+<blockquote>
+<p>Excluyendo las respuestas incompletas (finished= 0) la mediana de duración del cuestionario es <strong><span style="color: red;">17.79 minutos</span> </strong></p>
+</blockquote>
+<ul>
+<li>Seleccionamos las variables que identifican la viñeta y el deck al que pertenece.</li>
+</ul>
+<pre class="r"><code>nam01&lt;- decks01 %&gt;% select(starts_with(&quot;deck_vig&quot;)) %&gt;% names()
+decks02 &lt;- data.frame(!(is.na(decks01[nam01])));decks02[decks02==FALSE] &lt;- NA
+decks03 &lt;- bind_cols(select(decks01,-nam01),decks02)
+
+w &lt;- which(decks03==&quot;TRUE&quot;,arr.ind=TRUE)
+decks03[w] &lt;- names(decks03)[w[,&quot;col&quot;]]</code></pre>
+<blockquote>
+<p>Agregar dummy para termina/no-termina el cuestionario.</p>
+</blockquote>
+</div>
+</div>
+<div id="base-de-datos-de-wide-a-long" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Base de datos de wide a long</h1>
+<pre class="r"><code>wide &lt;- setDT(decks03)
+
+long01&lt;- melt(wide, 
+              id.vars = &quot;ResponseId&quot;,
+              variable.name = &quot;wave&quot;,
+              measure = patterns(&quot;^p_a_&quot;,&quot;^p_b_&quot;,&quot;deck_vig&quot;),
+              value.name = c(&quot;taxperc&quot;,&quot;taxjust&quot;,&quot;deck_vig&quot;));long01$wave &lt;- NULL
+long01 &lt;- na.omit(long01)
+long01$deck_vig  &lt;- str_replace_all(long01$deck_vig,pattern = &quot;deck_vig&quot;,replacement = &quot;&quot;)</code></pre>
+</div>
+<div id="recode-variables-de-impuesto-percibido-y-justo" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Recode variables de impuesto percibido y justo</h1>
+<pre class="r"><code>long01$taxperc &lt;- stri_replace_all(long01$taxperc, &quot;&quot;, fixed=c(&quot;$&quot;)) #delete $ symbol
+long01$taxperc &lt;- stri_replace_all(long01$taxperc, &quot;&quot;, fixed=c(&quot;.&quot;)) #delete . 
+long01$taxperc &lt;- as.numeric(long01$taxperc) # transform to numeric
+# summary(long01$taxperc) 
+                 
+long01$taxjust &lt;- stri_replace_all(long01$taxjust, &quot;&quot;, fixed=c(&quot;$&quot;)) #delete $ symbol
+long01$taxjust &lt;- stri_replace_all(long01$taxjust, &quot;&quot;, fixed=c(&quot;.&quot;)) #delete . 
+long01$taxjust &lt;- as.numeric(long01$taxjust) # transform to numeric
+# summary(long01$taxjust) </code></pre>
+<pre class="r"><code>stargazer(x = long01,type = &quot;html&quot;,median = T,digits = 0, title = &quot;&lt;caption&gt;(#tab:des01) Descriptivos&lt;/caption&gt; &quot;)</code></pre>
+<table style="text-align:center">
+<caption>
+<strong>
+<caption>
+<span id="tab:des01">Table 3.1: </span> Descriptivos
+</caption>
+</strong>
+</caption>
+<tr>
+<td colspan="9" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Statistic
+</td>
+<td>
+N
+</td>
+<td>
+Mean
+</td>
+<td>
+St. Dev.
+</td>
+<td>
+Min
+</td>
+<td>
+Pctl(25)
+</td>
+<td>
+Median
+</td>
+<td>
+Pctl(75)
+</td>
+<td>
+Max
+</td>
+</tr>
+<tr>
+<td colspan="9" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+taxperc
+</td>
+<td>
+1,668
+</td>
+<td>
+599,789,519
+</td>
+<td>
+24,485,123,460
+</td>
+<td>
+0
+</td>
+<td>
+20,000
+</td>
+<td>
+68,500
+</td>
+<td>
+230,000
+</td>
+<td>
+1,000,001,000,000
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+taxjust
+</td>
+<td>
+1,665
+</td>
+<td>
+144,628
+</td>
+<td>
+470,879
+</td>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td>
+30,000
+</td>
+<td>
+125,000
+</td>
+<td>
+10,000,000
+</td>
+</tr>
+<tr>
+<td colspan="9" style="border-bottom: 1px solid black">
+</td>
+</tr>
+</table>
+<div id="merge-respondentes-y-viñetas" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Merge respondentes y viñetas</h2>
+<ol style="list-style-type: upper-alpha">
+<li>Pegar sociodemograficos de respondente a base long.</li>
+</ol>
+<pre class="r"><code>long02&lt;- left_join(long01,data01[,c(&quot;ResponseId&quot;,&quot;Finished&quot;,&quot;sexo&quot;,&quot;edad&quot;,&quot;educ&quot;,&quot;ingresos&quot;,&quot;act_prin&quot;,&quot;comuna&quot;)])      </code></pre>
+<ol start="2" style="list-style-type: upper-alpha">
+<li>Nombrar variables nivel respondente</li>
+</ol>
+<pre class="r"><code>long02&lt;- long02 %&gt;% rename(&quot;respondeid&quot;=ResponseId,&quot;sexo.re&quot;=sexo,&quot;edad.re&quot;=edad,&quot;educ.re&quot;=educ, &quot;ingresos.re&quot; =ingresos, &quot;estlab.re&quot;=act_prin,&quot;finished&quot;=Finished) </code></pre>
+<ol start="3" style="list-style-type: upper-alpha">
+<li>Nombrar variables de nivel viñeta (generadas en SAS)</li>
+</ol>
+<pre class="r"><code>vig_dat&lt;- vig_dat %&gt;% rename(&quot;sexo.vig&quot;=sexo,
+                             &quot;apellido.vig&quot;=apellido,
+                             &quot;edad.vig&quot;=edad,
+                             &quot;nse_ori.vig&quot;=&quot;nivel_socioeconómico_de_origen&quot;,
+                             &quot;educ.vig&quot;=nivel_educativo,
+                             &quot;necesidades.vig&quot;=necesidades,
+                             &quot;educ_madre.vig&quot;=&quot;educación_de_la_madre&quot;, 
+                             &quot;ingresos.vig&quot;=ingresos)</code></pre>
+<ol start="4" style="list-style-type: upper-alpha">
+<li>Merge datos de viñetas a base long (nivel respondente + viñetas)</li>
+</ol>
+<pre class="r"><code>vig_resp&lt;- left_join(long02,vig_dat,by =c(&quot;deck_vig&quot;))  %&gt;% select(respondeid,deck,id,deck_vig,everything(),-p1)  </code></pre>
+</div>
+</div>
+<div id="etiquetado-variables" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Etiquetado variables</h1>
+<div id="etiqueta-nombre-de-variables" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Etiqueta nombre de variables</h2>
+<pre class="r"><code>vig_resp &lt;- vig_resp %&gt;% var_labels(respondeid = &quot;Id Respondent&quot;,
+                                    finished=&quot;Finished survey&quot;,
+                                    deck = &quot;Id Deck&quot;,
+                                    id = &quot;Id Vignette&quot;,
+                                    deck_vig = &quot;Id deck and vignette&quot;,
+                                    taxperc = &quot;Perceived income tax&quot;,
+                                    taxjust = &quot;Just income tax&quot;,
+                                    sexo.re = &quot;Gender (respondent level)&quot;,
+                                    edad.re = &quot;Age (respondent level)&quot;,
+                                    educ.re = &quot;Education (respondent level)&quot;,
+                                    ingresos.re = &quot;Income in CLP (respondent level)&quot;,
+                                    estlab.re = &quot;Job status (respondent level)&quot;,
+                                    comuna = &quot;Comuna (respondent level)&quot;,
+                                    sexo.vig = &quot;Gender (vignette level)&quot;,
+                                    apellido.vig = &quot;Etnicity - surname (vignette level)&quot;,
+                                    edad.vig = &quot;Age (vignette level)&quot;,
+                                    nse_ori.vig = &quot;SES of origin (vignette level)&quot;,
+                                    educ.vig = &quot;Education (vignette level)&quot;,
+                                    necesidades.vig = &quot;Needs - number of children (vignette level)&quot;,
+                                    educ_madre.vig = &quot;Mother&#39;s education level (vignette level)&quot;,
+                                    ingresos.vig = &quot;Income in CLP (vignette level)&quot;)</code></pre>
+</div>
+<div id="etiquetado-valores-de-variable" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Etiquetado valores de variable</h2>
+<pre class="r"><code>lb.vig_resp &lt;- get_labels(vig_resp)</code></pre>
+<pre class="r"><code>vig_resp$sexo.vig       &lt;- set_labels(vig_resp$sexo.vig       ,labels = c(&quot;Male&quot;=1,&quot;Female&quot;=2))
+vig_resp$apellido.vig   &lt;- set_labels(vig_resp$apellido.vig   ,labels = c(&quot;Spanish&quot;=1,&quot;Basque-Castilian&quot;=2,&quot;European&quot;=3,&quot;Indigenous&quot;=4))
+vig_resp$edad.vig       &lt;- set_labels(vig_resp$edad.vig       ,labels = c(&quot;35 years&quot;=1,&quot;45 years&quot;=2,&quot;55 years&quot;=3))
+vig_resp$nse_ori.vig    &lt;- set_labels(vig_resp$nse_ori.vig    ,labels = c(&quot;Public&quot;=1,&quot;Charter&quot;=2,&quot;Private&quot;=3))
+vig_resp$educ.vig       &lt;- set_labels(vig_resp$educ.vig       ,labels = c(&quot;Complete basic education&quot;=1,&quot;Complete secondary education&quot;=2,
+                                                                          &quot;Technical professional education&quot;=3,&quot;Full university education&quot;=4,&quot;Graduate Studies&quot;=5))
+vig_resp$necesidades.vig&lt;- set_labels(vig_resp$necesidades.vig,labels = c(&quot;Do not have children&quot;=1,&quot;Has 1 child&quot;=2,&quot;Has 2 children&quot;=3,&quot;Has 5 children&quot;=4))
+vig_resp$educ_madre.vig &lt;- set_labels(vig_resp$educ_madre.vig ,labels = c(&quot;Complete basic education&quot;=1,&quot;Complete secondary education&quot;=2,
+                                                                          &quot;Technical professional education&quot;=3,&quot;Full university education&quot;=4,&quot;Graduate Studies&quot;=5))
+vig_resp$ingresos.vig   &lt;- set_labels(vig_resp$ingresos.vig   ,labels = c(&quot;$320.500&quot;=1,&quot;$655.000&quot;=2,&quot;$1.200.000&quot;=3,&quot;$2.500.000&quot;=4,&quot;$4.300.000&quot;=5))</code></pre>
+<pre class="r"><code>vig_resp$sexo.re &lt;- set_labels(x = vig_resp$sexo.re, labels = c(&quot;Man&quot;=1,&quot;Woman&quot;=2))
+vig_resp$educ.re &lt;- set_labels(x = vig_resp$educ.re,
+                               labels = c(&quot;No formal education&quot;=1,
+                                          &quot;Primary education incomplete&quot;=2,
+                                          &quot;Complete primary education&quot;=3,
+                                          &quot;Incomplete secondary education&quot;=4,
+                                          &quot;Complete secondary education&quot;=5,
+                                          &quot;Non-university higher education incomplete&quot;=6,
+                                          &quot;Complete non-university higher education&quot;=7,
+                                          &quot;Incomplete college education&quot;=8,
+                                          &quot;Complete college education&quot;=9,
+                                          &quot;Postgraduate studies, master&#39;s, doctoral&quot;=10)) 
+
+vig_resp$estlab.re &lt;- set_labels(vig_resp$estlab.re,
+                                 labels = c(
+                                   &quot;Working for pay full-time&quot; = 1,
+                                   &quot;Working for pay part-time or do odd jobs&quot; = 2,
+                                   &quot;Study and work&quot; = 3,
+                                   &quot;Just study&quot; = 4,
+                                   &quot;Retired or pensioned&quot; = 5,
+                                   &quot;Unemployed, looking for work&quot; = 6,
+                                   &quot;Performs unpaid work (household chores, babysitting and others)&quot; = 7,
+                                   &quot;It is ill or has a disability&quot; = 8,
+                                   &quot;Not studying, not working and not looking for work&quot; = 9))
+
+
+vig_resp$ingresos.re &lt;- set_labels(vig_resp$ingresos.re,
+                                   labels =    c(&quot;Less than $35.000 monthly disposable income&quot; = 1 ,
+                                                 &quot;From $35.001  to $56.000 monthly disposable income&quot; = 2 ,
+                                                 &quot;From $56.001  to $78.000 monthly disposable income&quot; = 3 ,
+                                                 &quot;From $78.001  to $101.000 monthly disposable income&quot; = 4 ,
+                                                 &quot;From $101.001 to $134.000 monthly disposable income&quot; = 5 ,
+                                                 &quot;From $134.001 to $179.000 monthly disposable income&quot; = 6 ,
+                                                 &quot;From $179.001 to $224.000 monthly disposable income&quot; = 7 ,
+                                                 &quot;From $224.001 to $291.000 monthly disposable income&quot; = 8 ,
+                                                 &quot;From $291.001 to $358.000 monthly disposable income&quot; = 9 ,
+                                                 &quot;From $358.001 to $448.000 monthly disposable income&quot; = 10,
+                                                 &quot;From $448.001 to $1.000.000 monthly disposable incomes&quot; = 11,
+                                                 &quot;From $1.000.001 to $2.000.000 monthly disposable income&quot; = 12,
+                                                 &quot;From $2.000.001 to $3.000.000 monthly disposable income&quot; = 13,
+                                                 &quot;More than $3.000.000 monthly disposable income&quot; = 14))</code></pre>
+</div>
+</div>
+<div id="explorar-datos" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Explorar datos</h1>
+<div id="patrón-de-respuesta-de-0" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Patrón de respuesta de $0</h2>
+<ul>
+<li>Exploramos el patrón de respuesta para valores $0 en variables de impuestos (<code>taxperc</code> y <code>taxjust</code>)</li>
+</ul>
+<table>
+<caption><span id="tab:tab-model-table">Table 5.1: </span> Ingresos de Viñeta</caption>
+<thead>
+<tr class="header">
+<th><strong>Dimensiones</strong></th>
+<th><strong>Operacionalización</strong></th>
+<th><strong>Niveles</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Ingresos</strong></td>
+<td>Ingresos mensuales</td>
+<td><strong>1.</strong> $320.500</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>2.</strong> $655.000</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>3.</strong> $1.200.000</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>4.</strong> $2.500.000</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>5.</strong> $4.300.000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>plot_scatter(x =ingresos.vig,
+             y = taxperc,data = filter(vig_resp,taxperc==0),title = &quot;Distribución de $0 en taxperc según ingresos de viñeta&quot;)
+
+plot_scatter(x =ingresos.vig,
+             y = taxjust,data = filter(vig_resp,taxjust==0),title = &quot;Distribución de $0 en taxjust según ingresos de viñeta&quot;)</code></pre>
+<p><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-20-1.png" width="50%" /><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-20-2.png" width="50%" /></p>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="blue">
+<ul>
+<li>Vemos que tanto para <code>taxperc</code> y <code>taxjust</code> la concentración de respuestas $0 se encuentra en los niveles de ingreso 1 y 2.</li>
+<li>Según el SII el impuesto a la renta aplica para aquellos que perciben ingresos superiores a 13,5 ($680.022CLP) UTM.</li>
+</ul>
+</div>
+<pre class="r"><code>tab.pat &lt;- vig_resp %&gt;% group_by(respondeid) %&gt;% summarise(mean_taxperc=mean(x = taxperc,na.rm = T),
+                                                           mean_taxjust=mean(x = taxjust,na.rm = T)) %&gt;% arrange(mean_taxperc) %&gt;% arrange(mean_taxjust)
+
+n&lt;- tab.pat %&gt;% filter(mean_taxperc==0 &amp; mean_taxjust==0)
+
+tab.pat %&gt;% filter(mean_taxperc==0 | mean_taxjust==0)</code></pre>
+<pre><code>## # A tibble: 11 x 3
+##    respondeid        mean_taxperc mean_taxjust
+##    &lt;chr&gt;                    &lt;dbl&gt;        &lt;dbl&gt;
+##  1 R_3CB0E1C8DbBwvhD           0            0 
+##  2 R_3j3hX20s6jLSbam           0            0 
+##  3 R_27rFgM8pY34hLOj        1000            0 
+##  4 R_3Rw2s9R7F1ecFVW       55000            0 
+##  5 R_BYbW11k7rOuB6Yp       77500            0 
+##  6 R_UDZSIojjTP5vRux      108167.           0 
+##  7 R_1okkDJI8L1jy8sr      154167.           0 
+##  8 R_1nYM5mQa4YPmzTM      154250            0 
+##  9 R_spNer9msvl4pNW9      161583.           0 
+## 10 R_9LiCXVzIchQjhQd      293333.           0 
+## 11 R_3kH3RMfwk6dVrkv           0       149167.</code></pre>
+<ul>
+<li>Vemos que solamente hay 2 sujetos que responde $0 en <code>taxperc</code> y <code>taxjust</code></li>
+<li>se puede observar que existen respondentes que poseen media 0 en sus respuestas de <code>taxjust</code>, lo que se interpreta como que en las 12 viñetas evaluadas respondieron $0.</li>
+</ul>
+<!-- * PENDIENTE: decidir qué se hace con estos casos (excluir?) -->
+<blockquote>
+<p><strong>NOTA</strong> se excluyen el(los) caso(s) que responde $0 en <code>taxperc</code> y <code>taxjust</code> para todas las viñetas</p>
+</blockquote>
+<pre class="r"><code>tab.pat &lt;- tab.pat %&gt;% filter(mean_taxperc==0 &amp; mean_taxjust==0)
+
+vig_resp &lt;- vig_resp %&gt;% filter(!(respondeid %in% tab.pat$respondeid))  </code></pre>
+</div>
+<div id="revisar-patron-de-na-dentro-de-viñetas" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Revisar Patron de NA dentro de viñetas</h2>
+<pre class="r"><code>tax_na_wvig&lt;- vig_resp %&gt;% group_by(respondeid, deck,id,deck_vig) %&gt;% summarise(taxperc_na=sum(is.na(taxperc)),taxjust_na=sum(is.na(taxjust)))  %&gt;% ungroup()
+tax_na_wvig$id_vig_deck &lt;- paste0(&quot;d&quot;,str_pad(tax_na_wvig$deck, 2, pad = &quot;0&quot;),&quot;v&quot;,str_pad(tax_na_wvig$id, 2, pad = &quot;0&quot;))</code></pre>
+<pre class="r"><code>n_mis_tax&lt;- tax_na_wvig %&gt;% group_by(id_vig_deck) %&gt;% summarise(n_taxperc=sum(taxperc_na),n_taxjust=sum(taxjust_na))</code></pre>
+<pre class="r"><code># plot_scatter(data = n_mis_tax,x = id_vig_deck,y = n_taxperc,title = &quot;Missing en tax percibido&quot;) +theme(axis.text.x = element_text(angle = 90))
+ggplot(data = n_mis_tax,aes(x = id_vig_deck,y = n_taxperc)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_y_continuous(breaks = c(0,1,2)) +
+  labs(title = &quot;Missing en tax percibido&quot;,
+       subtitle = &quot;Análisis incluye casos que no terminaron el cuestionario&quot;)+
+  xlab(label = NULL)+
+  theme(axis.text.x = element_text(angle = 90))</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-25"></span>
+<img src="prod_prep-data-b_files/figure-html/unnamed-chunk-25-1.png" alt="Missing en tax percibido" width="1728" />
+<p class="caption">
+Figure 5.1: Missing en tax percibido
+</p>
+</div>
+<pre class="r"><code># plot_scatter(data = n_mis_tax,x = id_vig_deck,y = n_taxjust,title = &quot;Missing en tax justo&quot;) + theme(axis.text.x = element_text(angle = 90))
+ggplot(data = n_mis_tax,aes(x = id_vig_deck,y = n_taxjust)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  scale_y_continuous(breaks = c(0,1,2)) +
+  labs(title = &quot;Missing en tax justo&quot;,
+       subtitle =  &quot;Análisis incluye casos que no terminaron el cuestionario&quot;)+
+  xlab(label = NULL)+
+  theme(axis.text.x = element_text(angle = 90))</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-26"></span>
+<img src="prod_prep-data-b_files/figure-html/unnamed-chunk-26-1.png" alt="Missing en tax justo" width="1728" />
+<p class="caption">
+Figure 5.2: Missing en tax justo
+</p>
+</div>
+<blockquote>
+<p><strong>Nota</strong>: A nivel descriptivo no parece haber un marcado de NA asociado a viñetas. No obstante es importante ver que las viñetas con mayor cantidad de missing son las del deck 02 y 08.</p>
+</blockquote>
+</div>
+<div id="revisar-patron-de-na-de-viñetas-within-sujetos" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Revisar Patron de NA de viñetas within sujetos</h2>
+<pre class="r"><code>tab_na&lt;- tax_na_wvig %&gt;% filter(taxperc_na &gt;0 | taxjust_na &gt;0)
+tab_na</code></pre>
+<pre><code>## # A tibble: 40 x 7
+##    respondeid         deck    id deck_vig taxperc_na taxjust_na id_vig_deck
+##    &lt;chr&gt;             &lt;int&gt; &lt;int&gt; &lt;chr&gt;         &lt;int&gt;      &lt;int&gt; &lt;chr&gt;      
+##  1 R_1mKTaEYxkYVpg6m     8     3 83                1          1 d08v03     
+##  2 R_1mKTaEYxkYVpg6m     8     4 84                1          1 d08v04     
+##  3 R_20Ulek8WqvTqEzf     5     2 52                0          1 d05v02     
+##  4 R_24AETytJft7yz1T     8     1 81                1          1 d08v01     
+##  5 R_24AETytJft7yz1T     8     2 82                1          1 d08v02     
+##  6 R_24AETytJft7yz1T     8     5 85                1          0 d08v05     
+##  7 R_24AETytJft7yz1T     8     6 86                1          1 d08v06     
+##  8 R_24AETytJft7yz1T     8     7 87                1          1 d08v07     
+##  9 R_24AETytJft7yz1T     8     8 88                1          1 d08v08     
+## 10 R_24AETytJft7yz1T     8     9 89                1          1 d08v09     
+## # ... with 30 more rows</code></pre>
+<ul>
+<li>Seleccionamos los sujetos que tienen missing en al menos 1 de las variables de impuestos</li>
+</ul>
+<pre class="r"><code>tab_na_gt0 &lt;- tab_na %&gt;% group_by(respondeid) %&gt;% summarise(n_taxperc_na=sum(taxperc_na),n_taxjust_na=sum(taxjust_na)) %&gt;% arrange(n_taxperc_na,n_taxjust_na)
+n2&lt;- tab_na_gt0 %&gt;% filter(n_taxperc_na&gt;=5 | n_taxjust_na&gt;=5) %&gt;% dim()</code></pre>
+<blockquote>
+<p><strong>Nota</strong>: Existen <strong>3 respondentes</strong> que tienen 5 o más missing en <code>taxperc</code> o <code>taxjust</code></p>
+</blockquote>
+<pre class="r"><code>idresp_gt5 &lt;- tab_na_gt0 %&gt;% filter(n_taxperc_na&gt;=5 | n_taxjust_na&gt;=5)
+idresp_gt5</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   respondeid        n_taxperc_na n_taxjust_na
+##   &lt;chr&gt;                    &lt;int&gt;        &lt;int&gt;
+## 1 R_27rFgM8pY34hLOj            8            8
+## 2 R_24AETytJft7yz1T           10            9
+## 3 R_3R2fvIKGup7Cnhl           12           12</code></pre>
+<blockquote>
+<p><strong>Nota</strong>: Se excluyen de la muestra aquellos sujetos que tienen 5 o más missing en <code>taxperc</code> o <code>taxjust</code></p>
+</blockquote>
+</div>
+<div id="modelos-para-respuesta-0" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Modelos para respuesta $0</h2>
+<div id="logit" class="section level3" number="5.4.1">
+<h3><span class="header-section-number">5.4.1</span> Logit</h3>
+<ul>
+<li>Creamos la variable dummy donde 1= “sujeto responde 0” y 0 = “sujeto responde != 0”</li>
+</ul>
+<pre class="r"><code>vig_resp$pertax.0 &lt;- ifelse(test = vig_resp$taxperc==0,yes = 1,no = 0) 
+vig_resp$pertax.0 &lt;- as.factor(vig_resp$pertax.0)
+summary(vig_resp$pertax.0)</code></pre>
+<pre><code>##    0    1 NA&#39;s 
+## 1428  216   36</code></pre>
+<pre class="r"><code>vig_resp$justax.0 &lt;- ifelse(test = vig_resp$taxjust==0,yes = 1,no = 0) 
+vig_resp$justax.0 &lt;- as.factor(vig_resp$justax.0)
+summary(vig_resp$justax.0)</code></pre>
+<pre><code>##    0    1 NA&#39;s 
+## 1235  406   39</code></pre>
+<pre class="r"><code>vig_resp&lt;-  vig_resp %&gt;% var_labels(justax.0 = &quot;Response $0 | Just income tax&quot;,
+                                    pertax.0  =&quot;Response $0 | Perceived incom tax&quot;)</code></pre>
+<pre class="r"><code># vig_resp&lt;- vig_resp %&gt;% filter(!(is.na(pertax.0)) | !(is.na(justax.0)))</code></pre>
+<pre class="r"><code>m01 &lt;- glm(pertax.0~1+sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+respondeid+finished,data = vig_resp,family=binomial(link= &quot;logit&quot;))
+m02 &lt;- glm(justax.0~1+sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+respondeid+finished,data = vig_resp,family=binomial(link= &quot;logit&quot;)) </code></pre>
+<!-- * **Revisar**: [complete separation in logistic regression](https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faqwhat-is-complete-or-quasi-complete-separation-in-logistic-regression-and-what-are-some-strategies-to-deal-with-the-issue/#:~:text=A%20complete%20separation%20in%20a,separates%20a%20predictor%20variable%20completely.&text=In%20terms%20of%20predicted%20probabilities,need%20for%20estimating%20a%20model.) -->
+<pre class="r"><code>texreg::htmlreg(l = list(m01,m02),omit.coef = &quot;respondeid&quot;,custom.model.names = c(&quot;pertax.0&quot;,&quot;justax.0&quot;),
+                caption = &quot;(\\#tab:tab-logit01) Regresion logística&quot;, 
+                doctype = F, caption.above = T,
+                custom.note = &quot;Efectos fijos por id respondente; *** p &lt; 0.001, ** p &lt; 0.01, * p &lt; 0.05&quot;)</code></pre>
+<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;color: #000000;border-top: 2px solid #000000;">
+<caption>
+<span id="tab:tab-logit01">Table 5.2: </span> Regresion logística
+</caption>
+<thead>
+<tr>
+<th style="padding-left: 5px;padding-right: 5px;">
+ 
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+pertax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+justax.0
+</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+(Intercept)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-15.13
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+6.85<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(6291.11)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.55)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+sexo.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.49
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.40
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.41)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.33)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+edad.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.02
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.24)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.20)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+educ.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.09
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.22<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.13)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.11)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+apellido.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.03
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.08
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.17)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.14)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+nse_ori.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.11
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.03
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.23)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.19)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+necesidades.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.23
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.29<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.19)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.15)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+educ_madre.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.22
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.10
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.16)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.12)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ingresos.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-3.52<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-3.43<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.31)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.27)
+</td>
+</tr>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+AIC
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+539.13
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+633.51
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+BIC
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1333.65
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1427.76
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Log Likelihood
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-122.57
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-169.75
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Deviance
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+245.13
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+339.51
+</td>
+</tr>
+<tr style="border-bottom: 2px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+Num. obs.
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1644
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1641
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="font-size: 0.8em;" colspan="3">
+Efectos fijos por id respondente; *** p &lt; 0.001, ** p &lt; 0.01, * p &lt; 0.05
+</td>
+</tr>
+</tfoot>
+</table>
+<ul>
+<li>Se omiten los coeficientes para cada <code>respondeid</code></li>
+</ul>
+</div>
+<div id="logit-multinivel" class="section level3" number="5.4.2">
+<h3><span class="header-section-number">5.4.2</span> Logit multinivel</h3>
+<pre class="r"><code>m01.me &lt;- glmer(pertax.0~1 + (1|respondeid),data = vig_resp,family = &quot;binomial&quot;)
+m02.me &lt;- glmer(justax.0~1 + (1|respondeid),data = vig_resp,family = &quot;binomial&quot;)</code></pre>
+<pre class="r"><code>htmlreg(list(m01.me,m02.me),
+        custom.model.names = c(&quot;pertax.0&quot;,&quot;justax.0&quot;),
+        caption = &quot;(\\#tab:tab-logit02) Modelos de regresión logística multinivel (nulos)&quot;,
+        doctype = F, caption.above = T)</code></pre>
+<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;color: #000000;border-top: 2px solid #000000;">
+<caption>
+<span id="tab:tab-logit02">Table 5.3: </span> Modelos de regresión logística multinivel (nulos)
+</caption>
+<thead>
+<tr>
+<th style="padding-left: 5px;padding-right: 5px;">
+ 
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+pertax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+justax.0
+</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+(Intercept)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-3.04<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-1.87<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.28)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.23)
+</td>
+</tr>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+AIC
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1105.28
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1492.70
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+BIC
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1116.09
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1503.51
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Log Likelihood
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-550.64
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-744.35
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Num. obs.
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1644
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1641
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Num. groups: respondeid
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+</tr>
+<tr style="border-bottom: 2px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+Var: respondeid (Intercept)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+4.10
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+4.68
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="font-size: 0.8em;" colspan="3">
+<sup><em><strong></sup>p &lt; 0.001; <sup></strong></sup>p &lt; 0.01; <sup></em></sup>p &lt; 0.05
+</td>
+</tr>
+</tfoot>
+</table>
+<ul>
+<li>Calculamos la ICC usando el método de variable latente: donde <span class="math inline">\(\pi^2/3\)</span> = 3.2865333</li>
+</ul>
+<pre class="r"><code>pi2_3&lt;- (3.14^2)/3
+tau2.1&lt;- m01.me@theta^2 #tau2 variance random intercept
+tau2.2&lt;- m02.me@theta^2 #tau2 variance random intercept
+
+icc01 &lt;- tau2.1/(tau2.1+pi2_3) #icc taxperc
+icc02 &lt;- tau2.2/(tau2.2+pi2_3) #icc taxjust
+
+kable(rbind(&quot;taxperc&quot;=icc01,&quot;taxjust&quot;=icc02),col.names = c(&quot;ICC&quot;),digits = 3,caption = &quot;Intra-class correlation&quot;)</code></pre>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-39">Table 5.4: </span>Intra-class correlation
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+ICC
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+taxperc
+</td>
+<td style="text-align:right;">
+0.555
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+taxjust
+</td>
+<td style="text-align:right;">
+0.587
+</td>
+</tr>
+</tbody>
+</table>
+<div id="estimación-modelos-de-intercepto-aleatorio-para-0-entaxperc-y-taxjust" class="section level4" number="5.4.2.1">
+<h4><span class="header-section-number">5.4.2.1</span> Estimación modelos de intercepto aleatorio para $0 en<code>taxperc</code> y <code>taxjust</code></h4>
+<pre class="r"><code>m03.me   &lt;- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig +(1|respondeid),data = vig_resp,family = &quot;binomial&quot;)
+m03.me.1 &lt;- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig +(1|respondeid),data = vig_resp,family = &quot;binomial&quot;)
+m03.me.2 &lt;- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+educ.re + (1 |respondeid),data = vig_resp,family = &quot;binomial&quot;)
+m03.me.3 &lt;- glmer(pertax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig*educ.re + (1 + ingresos.vig |respondeid),data = vig_resp,family = &quot;binomial&quot;)
+
+m04.me   &lt;- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ (1 | respondeid),data = vig_resp, family = &quot;binomial&quot;)
+m04.me.1 &lt;- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig  + (1 | respondeid),data = vig_resp, family = &quot;binomial&quot;)
+m04.me.2 &lt;- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig+educ.re + (1 | respondeid),data = vig_resp, family = &quot;binomial&quot;)
+m04.me.3 &lt;- glmer(justax.0~sexo.vig+edad.vig+educ.vig+apellido.vig+nse_ori.vig+necesidades.vig+educ_madre.vig+ingresos.vig*educ.re + (1+ingresos.vig | respondeid),data = vig_resp, family = &quot;binomial&quot;)</code></pre>
+<pre class="r"><code>htmlreg(list(m03.me,m03.me.1,m03.me.2,m03.me.3,m04.me,m04.me.1,m04.me.2,m04.me.3),
+        custom.model.names = c(&quot;pertax.0&quot;,&quot;pertax.0&quot;,&quot;pertax.0&quot;,&quot;pertax.0&quot;,&quot;justax.0&quot;,&quot;justax.0&quot;,&quot;justax.0&quot;,&quot;justax.0&quot;), 
+        single.row = F,
+        doctype = F,
+        caption = &quot;(\\#tab:tab-glm01) Modelos de regresión logística multinivel para respuesta $0&quot;, 
+        caption.above = T,
+        custom.note = &quot;*** p &lt; 0.001, ** p &lt; 0.01, * p &lt; 0.05&quot;)</code></pre>
+<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;color: #000000;border-top: 2px solid #000000;">
+<caption>
+<span id="tab:tab-glm01">Table 5.5: </span> Modelos de regresión logística multinivel para respuesta $0
+</caption>
+<thead>
+<tr>
+<th style="padding-left: 5px;padding-right: 5px;">
+ 
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+pertax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+pertax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+pertax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+pertax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+justax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+justax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+justax.0
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+justax.0
+</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+(Intercept)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.26<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.91
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-3.19<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-10.15<sup>*</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.10<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+2.64<sup>*</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.63
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-5.67
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.59)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.20)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(4.45)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.51)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.03)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.85)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(3.87)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+sexo.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.17
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.37
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.49<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.19
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.03
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.23
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.22
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.03
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.17)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.31)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.43)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.14)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.26)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.26)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.32)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+edad.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.12
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.11
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.08<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.37
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.07
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.21
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.21
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.31
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.10)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.18)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.26)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.09)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.16)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.16)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.19)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+educ.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.02
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.11
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.13<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.26
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.07
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.17
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.17
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.22<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.06)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.10)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.15)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.05)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.09)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.09)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.11)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+apellido.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.00
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.03
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.07<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.02
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.05
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.09
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.10
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.09
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.08)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.13)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.18)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.06)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.11)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.11)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.13)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+nse_ori.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.09
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.07
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.07<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.15
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.05
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.05
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.05
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.02
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.10)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.18)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.24)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.09)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.15)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.15)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.18)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+necesidades.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.01
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.08
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.11<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.21
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.00
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.14
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.13
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.25
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.08)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.14)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.20)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.06)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.12)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.12)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.15)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+educ_madre.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.01
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.03
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.11<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.04
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.01
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.04
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.04
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.07
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.06)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.11)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.16)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.05)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.09)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.09)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.11)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ingresos.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.96<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-3.67<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.03
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.82<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.82<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-1.02
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.28)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.51)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.22)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.22)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.13)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+educ.re
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.30<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.53
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.33
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.45<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.00)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(1.27)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.25)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.57)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ingresos.vig:educ.re
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.61
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.45<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.37)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.18)
+</td>
+</tr>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+AIC
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1116.02
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+610.79
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+603.01
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+484.24
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1503.44
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+827.78
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+828.01
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+771.14
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+BIC
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1164.66
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+664.84
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+662.46
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+559.91
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1552.06
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+881.81
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+887.44
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+846.78
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Log Likelihood
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-549.01
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-295.40
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-290.50
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-228.12
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-742.72
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-403.89
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-403.00
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-371.57
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Num. obs.
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1644
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1644
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1644
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1644
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1641
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1641
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1641
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1641
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Num. groups: respondeid
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+139
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Var: respondeid (Intercept)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+4.13
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+20.39
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+80.64
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+168.88
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+4.73
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+31.94
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+31.45
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+83.89
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Var: respondeid ingresos.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+15.28
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+7.52
+</td>
+</tr>
+<tr style="border-bottom: 2px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+Cov: respondeid (Intercept) ingresos.vig
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-46.56
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-19.10
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="font-size: 0.8em;" colspan="9">
+*** p &lt; 0.001, ** p &lt; 0.01, * p &lt; 0.05
+</td>
+</tr>
+</tfoot>
+</table>
+<blockquote>
+<p>Vemos que el ingreso de la viñeta se asocia negativa y estadísticamente significativa con responder $0.</p>
+</blockquote>
+<pre class="r"><code>plot01&lt;- plot_model(m04.me.3,title = &quot;Modelo logit multinivel con interacción - tax justo&quot;)
+plot01.int&lt;- plot_model(m04.me.3,type = &quot;int&quot;, title = &quot;Ingreso (vig) x Educación (res) - tax justo &quot;) + theme(legend.position = &quot;bottom&quot;)
+
+plot_grid(list(plot01, plot01.int), tags = TRUE,margin = c(0.5,0.5,0.5,0.5))</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-43"></span>
+<img src="prod_prep-data-b_files/figure-html/unnamed-chunk-43-1.png" alt="Resultados para tax justo" width="960" />
+<p class="caption">
+Figure 5.3: Resultados para tax justo
+</p>
+</div>
+<blockquote>
+<p>La asociación negativa del ingreso de la viñeta es moderado negativamente por la educación del respondente.</p>
+</blockquote>
+<hr />
+</div>
+</div>
+</div>
+</div>
+<div id="calcular-variables-de-impuestos" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Calcular variables de impuestos</h1>
+<div id="distribución" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Distribución</h2>
+<pre class="r"><code>sjPlot::plot_frq(data = vig_resp$taxperc,type = &quot;histogram&quot;)
+sjPlot::plot_frq(data = vig_resp$taxjust,type = &quot;histogram&quot;)</code></pre>
+<p><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-44-1.png" width="50%" /><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-44-2.png" width="50%" /></p>
+<p><strong>Debido al sesgo presentado en los gráficos, revisamos los valores de la distribución del 5% superior para identificar posibles outliers en la parte alta</strong></p>
+<pre class="r"><code>kable(rbind(taxperc= quantile(long01$taxperc, probs =seq(0.95, 1, by = 0.005),na.rm = T),
+            taxjust= quantile(long01$taxjust, probs =seq(0.95, 1, by = 0.005),na.rm = T)),
+      caption = &quot;Percentiles 95 a 100 para taxper y taxjust&quot;) %&gt;% kable_styling(font_size = 12,full_width = F)</code></pre>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-45">Table 6.1: </span>Percentiles 95 a 100 para taxper y taxjust
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+95%
+</th>
+<th style="text-align:right;">
+95.5%
+</th>
+<th style="text-align:right;">
+96%
+</th>
+<th style="text-align:right;">
+96.5%
+</th>
+<th style="text-align:right;">
+97%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+98%
+</th>
+<th style="text-align:right;">
+98.5%
+</th>
+<th style="text-align:right;">
+99%
+</th>
+<th style="text-align:right;">
+99.5%
+</th>
+<th style="text-align:right;">
+100%
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+taxperc
+</td>
+<td style="text-align:right;">
+636500
+</td>
+<td style="text-align:right;">
+655000
+</td>
+<td style="text-align:right;">
+752400
+</td>
+<td style="text-align:right;">
+800000
+</td>
+<td style="text-align:right;">
+860000
+</td>
+<td style="text-align:right;">
+900000
+</td>
+<td style="text-align:right;">
+1000000
+</td>
+<td style="text-align:right;">
+1300000
+</td>
+<td style="text-align:right;">
+1866000
+</td>
+<td style="text-align:right;">
+4000000
+</td>
+<td style="text-align:right;">
+1000001000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+taxjust
+</td>
+<td style="text-align:right;">
+500000
+</td>
+<td style="text-align:right;">
+500000
+</td>
+<td style="text-align:right;">
+550000
+</td>
+<td style="text-align:right;">
+600000
+</td>
+<td style="text-align:right;">
+704000
+</td>
+<td style="text-align:right;">
+800000
+</td>
+<td style="text-align:right;">
+888800
+</td>
+<td style="text-align:right;">
+1000000
+</td>
+<td style="text-align:right;">
+1500000
+</td>
+<td style="text-align:right;">
+2500000
+</td>
+<td style="text-align:right;">
+10000000
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tenemos que el Percentil 97.5 (equivalente al 2.5% superior) para taxperc es 900000 y para taxjust es 800000. Exploramos visualmente la distribución de las respuestas, excluyendo los valores que sean mayores al percentil 97.5:</strong></p>
+<pre class="r"><code>vig_resp$taxperc.rec &lt;- vig_resp$taxperc
+vig_resp$taxjust.rec &lt;- vig_resp$taxjust
+vig_resp$taxperc.rec &lt;- ifelse(vig_resp$taxperc.rec&lt;=900000,yes = vig_resp$taxperc.rec,no = NA)
+vig_resp$taxjust.rec &lt;- ifelse(vig_resp$taxjust.rec&lt;=800000,yes = vig_resp$taxjust.rec,no = NA)
+vig_resp$taxperc.rec &lt;-set_label(vig_resp$taxperc.rec,&quot;Perceived income tax (P97.5)&quot;)
+vig_resp$taxjust.rec &lt;-set_label(vig_resp$taxjust.rec,&quot;Just income tax (P97.5)&quot;)</code></pre>
+<pre class="r"><code>plot_frq(data = vig_resp$taxperc.rec,type = &quot;box&quot;)+ 
+  coord_flip()
+plot_frq(data = vig_resp$taxjust.rec,type = &quot;box&quot;)+  
+  coord_flip()</code></pre>
+<p><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-47-1.png" width="1152" /><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-47-2.png" width="1152" /></p>
+<pre class="r"><code>nota &lt;- &quot;Nota: se excluyen valores mayores al P97.5&quot;
+sjPlot::plot_frq(data = vig_resp$taxperc.rec,type = &quot;histogram&quot;,show.mean = T)+labs(caption = nota)
+sjPlot::plot_frq(data = vig_resp$taxjust.rec,type = &quot;histogram&quot;,show.mean = T)+labs(caption = nota)</code></pre>
+<p><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-48-1.png" width="1152" /><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-48-2.png" width="1152" /></p>
+<div class="row">
+<div class="col-md-6">
+<pre class="r"><code>sjmisc::frq(vig_resp$taxperc==0,title = &quot;Cantidad de respuestas $0 en taxperc&quot;)</code></pre>
+<pre><code>## 
+## Cantidad de respuestas $0 en taxperc
+## # total N=1680  valid N=1644  mean=0.13  sd=0.34
+## 
+## Value |    N | Raw % | Valid % | Cum. %
+## ---------------------------------------
+## FALSE | 1428 | 85.00 |   86.86 |  86.86
+## TRUE  |  216 | 12.86 |   13.14 | 100.00
+## &lt;NA&gt;  |   36 |  2.14 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+</div>
+<div class="col-md-6">
+<pre class="r"><code>sjmisc::frq(vig_resp$taxjust==0,title = &quot;Cantidad de respuestas $0 en taxjust&quot;) </code></pre>
+<pre><code>## 
+## Cantidad de respuestas $0 en taxjust
+## # total N=1680  valid N=1641  mean=0.25  sd=0.43
+## 
+## Value |    N | Raw % | Valid % | Cum. %
+## ---------------------------------------
+## FALSE | 1235 | 73.51 |   75.26 |  75.26
+## TRUE  |  406 | 24.17 |   24.74 | 100.00
+## &lt;NA&gt;  |   39 |  2.32 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+</div>
+</div>
+<p>Vemos que en el caso de <code>taxpec</code>, las respuestas $0 son un 13,12%, mientras que en <code>taxjust</code> son un un 24,7%. Como vimos anteriormente en los modelos regresión, las respuesta no son independientes de los ingresos de la viñeta. Por tanto, se recomienda mantener estos valores.</p>
+<style>
+div.blue { background-color:#98FB98; border-radius: 5px; padding: 20px;}
+</style>
+<div class="blue">
+<p><strong>Decisión:</strong> Finalmente filtramos y excluimos los valores en parte superior de ambas variables equivalentes a <code>taxperc &lt; 900000 &amp; taxjust&lt; 800000</code></p>
+</div>
+<pre class="r"><code>vig_resp &lt;- vig_resp %&gt;% filter(taxperc &lt; 900000 &amp; taxjust&lt; 800000)</code></pre>
+</div>
+<div id="alternativa-a-incluye-0" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Alternativa A: incluye $0</h2>
+<p>Realizamos la transformación en escala logarítmica sobre taxperc y taxjust, <strong>manteniendo las respuestas $0</strong>:</p>
+<pre class="r"><code>vig_resp$taxperc.ln&lt;- log(vig_resp$taxperc+(min(vig_resp$taxperc,na.rm = T)+1))
+set_label(vig_resp$taxperc.ln) &lt;- &quot;ln(perceived tax) - include $0&quot;
+
+vig_resp$taxjust.ln&lt;- log(vig_resp$taxjust+(min(vig_resp$taxjust,na.rm = T)+1))
+set_label(vig_resp$taxjust.ln) &lt;- &quot;ln(just tax) - include $0&quot;</code></pre>
+<pre class="r"><code>sjPlot::plot_frq(data = vig_resp$taxperc.ln,type = &quot;histogram&quot;,show.mean = T)
+sjPlot::plot_frq(data = vig_resp$taxjust.ln,type = &quot;histogram&quot;,show.mean = T)</code></pre>
+<p><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-53-1.png" width="50%" /><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-53-2.png" width="50%" /></p>
+</div>
+<div id="alternativa-b-excluye-0" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Alternativa B: excluye $0</h2>
+<p>Realizamos la transformación en escala logarítmica sobre taxperc y taxjust, <strong>excluyendo las respuestas $0</strong>:</p>
+<pre class="r"><code>vig_resp$taxperc.b &lt;- vig_resp$taxperc 
+vig_resp$taxperc.b[vig_resp$taxperc.b==0] &lt;- NA
+vig_resp$taxperc.ln2&lt;- log(vig_resp$taxperc.b+(min(vig_resp$taxperc.b,na.rm = T)+1));vig_resp$taxperc.b=NULL
+set_label(vig_resp$taxperc.ln2) &lt;- &quot;ln(perceived tax) - exclude $0&quot;</code></pre>
+<pre class="r"><code>vig_resp$taxjust.b &lt;- vig_resp$taxjust
+vig_resp$taxjust.b[vig_resp$taxjust.b==0] &lt;- NA
+vig_resp$taxjust.ln2&lt;- log(vig_resp$taxjust.b+(min(vig_resp$taxjust.b,na.rm = T)+1));vig_resp$taxjust.b=NULL
+set_label(vig_resp$taxjust.ln2) &lt;- &quot;ln(just tax) - exclude $0&quot;</code></pre>
+<pre class="r"><code>sjPlot::plot_frq(data = vig_resp$taxperc.ln2,type = &quot;histogram&quot;,show.mean = T)
+sjPlot::plot_frq(data = vig_resp$taxjust.ln2,type = &quot;histogram&quot;,show.mean = T)</code></pre>
+<p><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-56-1.png" width="50%" /><img src="prod_prep-data-b_files/figure-html/unnamed-chunk-56-2.png" width="50%" /></p>
+</div>
+</div>
+<div id="general-descriptives" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> General descriptives</h1>
+<pre class="r"><code>print(dfSummary(vig_resp, headings = FALSE), method = &quot;render&quot;)</code></pre>
+<div class="container st-container">
+<table class="table table-striped table-bordered st-table st-table-striped st-table-bordered st-multiline ">
+  <thead>
+    <tr>
+      <th align="center" class="st-protect-top-border"><strong>No</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Variable</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Label</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Stats / Values</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Freqs (% of Valid)</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Graph</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Valid</strong></th>
+      <th align="center" class="st-protect-top-border"><strong>Missing</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">1</td>
+      <td align="left">respondeid
+[character]</td>
+      <td align="left">Id Respondent</td>
+      <td align="left">1. R_10Vn8PiXRecsp8k
+2. R_12m69UhHtr1fEkG
+3. R_1FR5T0alBmVTvsY
+4. R_1gjDuJH5Q2KDMGx
+5. R_1HpfsqWQCAsXquU
+6. R_1hyYtovzvAA5IZa
+7. R_1IguTbaUpU2xppq
+8. R_1lzxQnyLQ0fweaH
+9. R_1meLDxdCEIF8SI0
+10. R_1NCAsce4yF7fcqg
+[ 129 others ]</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">12</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">1449</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">92.3%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJcAAAESBAMAAAACu1qVAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0VU5kyDwAAALNJREFUeNrt1cENwgAQA8GUEDpAoQT6740PDRBZ6KwbFzCfffg47M6uR2AnDAaDwdZjCWsbNrcmDAaDwaqwhFWAzQ0Ag8FgsCosYW3D5taEwWAwWBWWsAqwuQFgMBgMVoUlrAJsbgAYDAaD7cUSVgE2NwAMBoPBqrCEVYDNDQCDwWCwKixhbcPm1oTBYDBYFZawCrC5AWAwGAxWhSWsbdiV2POLvd6BwWAwGOxfWPQD7Ld9AAvGmSlxhrOEAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIxLTA0OjAwdIxdSgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMS0wNDowMAXR5fYAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">2</td>
+      <td align="left">deck
+[integer]</td>
+      <td align="left">Id Deck</td>
+      <td align="left">Mean (sd) : 5.5 (2.9)
+min < med < max:
+1 < 5 < 10
+IQR (CV) : 5 (0.5)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">168</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">10.7%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">177</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">11.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">126</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">8.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">163</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">10.4%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">161</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">10.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">6</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">170</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">10.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">7</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">156</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">9.9%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">8</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">114</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">7.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">9</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">165</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">10.5%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">10</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">169</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">10.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAB4AAAD6BAMAAABEy+oFAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAHpJREFUSMftl0EKwCAMBP2CT9D+IP7/bx7UgguFYNqSwO5tLgmOxGBK9tSZMvlqI2Qdo7+8csirXoV+QlYx+jvzX24e9claRn9vzcPerwlZx+iP/mP5f7oPL/svGlv3NefB4zzkfR8JWcvoj+/Rv/zV/8HL+aIx+rOkA1p7V4tuhJm7AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">3</td>
+      <td align="left">id
+[integer]</td>
+      <td align="left">Id Vignette</td>
+      <td align="left">Mean (sd) : 6.5 (3.4)
+min < med < max:
+1 < 7 < 12
+IQR (CV) : 5 (0.5)</td>
+      <td align="left" style="vertical-align:middle">12 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAHZJREFUaN7t17ENgCAQQFFW0A3ADXT/3YxCwRXERLR7vyJc7lGTkt5UastcDduOqx0Gg8FgMBgMBoPBYLBJrH1XIzb6wq51kPvNft7WI9aToXtw1HN4OD9hdXN41Q+iP4uFKxgMBoPBYDAYDAaDwX7EyiclvekEFNLPRwYXoDIAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">4</td>
+      <td align="left">deck_vig
+[character]</td>
+      <td align="left">Id deck and vignette</td>
+      <td align="left">1. 1010
+2. 1012
+3. 102
+4. 103
+5. 106
+6. 109
+7. 110
+8. 15
+9. 19
+10. 21
+[ 110 others ]</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">15</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">1.0%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">1419</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">90.4%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJQAAAESBAMAAADpjOGWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAALBJREFUeNrt1EENAgEQBEEsYOFwAP698UEAhHl07qoF1GM22dtNv3Tc/w+FQqFQp6UG0mWo5gVRKBQKFaEGUptqzo5CoVCoCDWQLkM1L4hCoVCoCDWQ2lRzdhQKhUJFqIHUppqzo1AoFOp81EBqU83ZUSgUChWhBlKbas6OQqFQqAg1kC5DNS+IQqFQqAg1kNpUc3YUCoVCRaiBdBnqGPShHq+/e6JQKBRqQA1/u77rDTM1ctSIsBBZAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">5</td>
+      <td align="left">taxperc
+[numeric]</td>
+      <td align="left">Perceived income tax</td>
+      <td align="left">Mean (sd) : 132630 (160456.2)
+min < med < max:
+0 < 65000 < 860000
+IQR (CV) : 180000 (1.2)</td>
+      <td align="left" style="vertical-align:middle">176 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAH9JREFUaN7t2bENgDAMBVGvwAiEDcj+u1HglAHnY4SAu4buCSE7RTAjpeLN05UcW+oeGBgYGBgYGBgYGBgYGBgYGBgYGBgY2K+xdvuegvlzBfsSpv2f6WDaDIPdhQX3P4YFx++tWPtWKdjgyj6InYzIGFaP31DDOieUYyUlI6UNP3mAAO9TQaUAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">6</td>
+      <td align="left">taxjust
+[numeric]</td>
+      <td align="left">Just income tax</td>
+      <td align="left">Mean (sd) : 90118.2 (132270.8)
+min < med < max:
+0 < 30000 < 700000
+IQR (CV) : 113000 (1.5)</td>
+      <td align="left" style="vertical-align:middle">124 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAIFJREFUaN7t2cENgCAQBVFakA5cO9D+e1MMQVAj2V1jPMwcCKeXz5kQyJKkxsFZxqZlCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAzsl5j7U6DG3PPAwMAaTEp69oJ5Nn6F6d/6gOnn9TDVvB5W5kVp82HpMh+HGdun3GDxtDFj8kqBLK3vWENpR67l/wAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">7</td>
+      <td align="left">finished
+[numeric]</td>
+      <td align="left">Finished survey</td>
+      <td align="left">1 distinct value</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">1569</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">100.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAKIAAAAgCAQAAAA7g2tDAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfkCBUNLRbKkGO1AAAAiUlEQVRo3u3ZMQrCMABAUSO9oKMndOwRdax1kvZD0b43JQRC+JAsGc8Le12PPsA/EDEgYmB6nzw8kF+7j2U8rZduR5/tR8yrmescEDEgYkDEgIgBEQMiBkQMiBgQMSBiQMSAiAERAyIGRAyIGBAxIGJAxICIgY/fvnnbLic3fDXv5zoHRAyIGHgBq0kF8n47YVkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">8</td>
+      <td align="left">sexo.re
+[numeric]</td>
+      <td align="left">Gender (respondent level)</td>
+      <td align="left">Min : 1
+Mean : 1.7
+Max : 2</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">538</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">34.5%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">1019</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">65.5%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAG8AAAA4BAMAAAABYLscAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAEVJREFUSMdjYBgZQAknEMQOBKAalY1xAKNRjaMaRzWOaqS+RrILK0FSwRDUqEQqUCAUHbjAqMZRjaMaRzVSoJHswmq4AwD+7286WjI4zQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1557
+(99.24%)</td>
+      <td align="center">12
+(0.76%)</td>
+    </tr>
+    <tr>
+      <td align="center">9</td>
+      <td align="left">edad.re
+[numeric]</td>
+      <td align="left">Age (respondent level)</td>
+      <td align="left">Mean (sd) : 3.1 (1.4)
+min < med < max:
+1 < 3 < 5
+IQR (CV) : 2 (0.5)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">271</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">17.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">327</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">323</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.6%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">315</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.1%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">333</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">21.2%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAC0AAACABAMAAABttv2ZAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAFlJREFUSMdjYKA9UEIGioKCAlBxZWMkMCo+ZMVxxa8gGiBXXAkNYHWPsbHRqPjwEscV76PpalScEnE6pytFHO4ZFR9m4rjinVbllQJ29xiPig9NcVzxS0sAABaCVObvpDjOAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">10</td>
+      <td align="left">educ.re
+[numeric]</td>
+      <td align="left">Education (respondent level)</td>
+      <td align="left">Mean (sd) : 6.1 (2.2)
+min < med < max:
+2 < 5 < 10
+IQR (CV) : 3 (0.4)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">92</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">5.9%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">101</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">6.4%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">143</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">9.1%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">455</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">29.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">6</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">112</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">7.1%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">7</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">198</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">12.6%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">8</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">116</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">7.4%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">9</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">272</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">17.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">10</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">80</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">5.1%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAADgAAADiBAMAAADpDRlkAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAKBJREFUWMPt2MENgCAQRFFb2BLUDqD/3ozEg+DuBgE1Jn+u7+AcBjFO0zdZ9kiZA9cYYwDBDnQHJmq6kVGDv93t5amntte+IFiP7sBEzahRF8naFgkgmKG7oSd3OxuY2oJgB7oDEzUDX8ZW23TsQNBEd0Pt03RR/W7J2gYQbEd3YKJm4Mv4fBGURzC7QkCwfkMP7tbEVfunAoI30B3Y29kAVfYF4GNVkkQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">11</td>
+      <td align="left">ingresos.re
+[numeric]</td>
+      <td align="left">Income in CLP (respondent level)</td>
+      <td align="left">Mean (sd) : 9.9 (3.1)
+min < med < max:
+1 < 11 < 14
+IQR (CV) : 3 (0.3)</td>
+      <td align="left" style="vertical-align:middle">14 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAKtJREFUaN7t2cENgCAMhWFW0A2kG+j+u6mYiDZcaKsH/d8NU75gJICaErFk6Ewu0VeNmCxbZjAwMDAwMDAwMDemD2kuTA8PDAwM7LfYWJbXKGwXFjAwMDAwMDt2bExR2CmAfRo7Pun7scupyI9d2v/C2j9YjJjoKROJNUdqxaROoSkIK3Vg/Vh9Cn1Y7SeqzoDV24rC1FubD5N78QNYPjfzAKzd+Q0shyQRS1YTXNM6zgZuqgAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1565
+(99.75%)</td>
+      <td align="center">4
+(0.25%)</td>
+    </tr>
+    <tr>
+      <td align="center">12</td>
+      <td align="left">estlab.re
+[numeric]</td>
+      <td align="left">Job status (respondent level)</td>
+      <td align="left">Mean (sd) : 3.7 (2.5)
+min < med < max:
+1 < 3 < 9
+IQR (CV) : 5 (0.7)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">529</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">33.7%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">207</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">13.2%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">56</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">3.6%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">94</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">6.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">114</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">7.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">6</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">276</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">17.6%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">7</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">257</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">16.4%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">8</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">24</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">1.5%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">9</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">12</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">0.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAD8AAADiBAMAAAAL0QIdAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAKhJREFUWMPt1tEJhDAQhGFLcDvQpIPYf28HcqDCrvNwawzHP88fmMAMZprGSImyfEHdggAALwFZWosyp4Hjo6sPjlsAAF2A7KRFSd3FPahbAwCGArK0FiV1OP4pzvNvAEA/IDtpUZJ3UW7A/ltsAMA4QJbWomQPx3kQXm7hPSkBgGeA7OTvtZcgOoJ7CwBgBCBLa1ESh7MKUAGAvkB20uxxUACAvwNv5wMLZEMo5LcuYQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">13</td>
+      <td align="left">comuna
+[numeric]</td>
+      <td align="left">Comuna (respondent level)</td>
+      <td align="left">Mean (sd) : 206.1 (98.1)
+min < med < max:
+10 < 230 < 341
+IQR (CV) : 184 (0.5)</td>
+      <td align="left" style="vertical-align:middle">47 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAMtJREFUaN7t1w0KgzAMBeBewd1g9QbL/e82fxIWJDLaPjYNL1AQ03wK1VhLYfTE1B11CTsexmaRFzFiSbH1XXmisGWmEEuMPXxrHcbEVRMjRuxymH0eIJiliBEjBsWqBgQTHcRugbk92Tjmnkxibdi2OYZhVvU/zDb7GCzugJmws/UPsHXmF+zk8kFKRwdmNwzBxI1M2L5UIExnEyOmv1YYTCtxmG8Nw9ihKhum3RyDRSliUOyzXI3Y8bPtUu1YcJoYMWK/wiokCqMn3u4+fhUqPd5CAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1546
+(98.53%)</td>
+      <td align="center">23
+(1.47%)</td>
+    </tr>
+    <tr>
+      <td align="center">14</td>
+      <td align="left">sexo.vig
+[numeric]</td>
+      <td align="left">Gender (vignette level)</td>
+      <td align="left">Min : 1
+Mean : 1.5
+Max : 2</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">781</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">49.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">788</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">50.2%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAFgAAAA4BAMAAACLTyJdAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAADxJREFUSMdjYBiaQIkYoAhVrGxMBBhVPKp4VDHNFJOUYQWJAoNLMVEeVCIl6IxGFY8qHlVMK8UkZdihBgAUZEkqMlG4MQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">15</td>
+      <td align="left">apellido.vig
+[numeric]</td>
+      <td align="left">Etnicity - surname (vignette level)</td>
+      <td align="left">Mean (sd) : 2.5 (1.1)
+min < med < max:
+1 < 3 < 4
+IQR (CV) : 2 (0.4)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">390</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">24.9%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">387</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">24.7%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">395</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">25.2%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">397</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">25.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAADMAAABoBAMAAACuxtUtAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAEFJREFUSMdjYKAvUMIEAlApZWN0YDQqNZKk8KQNQUxAM6nRJDoqhUtqNImOSg1yqcGbRBVwOt54VGokSeFJG/QCAHEYRWdfdq5mAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">16</td>
+      <td align="left">edad.vig
+[numeric]</td>
+      <td align="left">Age (vignette level)</td>
+      <td align="left">Mean (sd) : 2 (0.8)
+min < med < max:
+1 < 2 < 3
+IQR (CV) : 2 (0.4)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">525</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">33.5%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">523</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">33.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">521</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">33.2%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAD8AAABQBAMAAABc07BjAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAEBJREFUSMdjYBgcQAkXUIAqUDbGAUYVjCqgjQKCaVIQFxCgn4LRjDOqYMgpGNo5S4CAN41GFYwqoI0CgmlyoAEAv+1FnxicZOgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">17</td>
+      <td align="left">nse_ori.vig
+[numeric]</td>
+      <td align="left">SES of origin (vignette level)</td>
+      <td align="left">Mean (sd) : 2 (0.8)
+min < med < max:
+1 < 2 < 3
+IQR (CV) : 2 (0.4)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">512</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">32.6%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">523</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">33.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">534</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">34.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAEAAAABQBAMAAABbkW52AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAElJREFUSMdjYBgcQAkXEIQqUDbGDoxGFYwqoI0CgmlSECegnwKcjlQk4E3jUQWjCgZIAcFEO6hzlhIhbxqNKhhVQBMFBNPkQAMAYR9HLECmOPQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">18</td>
+      <td align="left">educ.vig
+[numeric]</td>
+      <td align="left">Education (vignette level)</td>
+      <td align="left">Mean (sd) : 3 (1.4)
+min < med < max:
+1 < 3 < 5
+IQR (CV) : 2 (0.5)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">320</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.4%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">311</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">19.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">311</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">19.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">314</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">313</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAACsAAACABAMAAABgqI3eAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAFBJREFUSMdjYKAtUEIFClBhZWMUMCo8FIRxxKUgKhAgSxjNbAGsLjEaFR7CwjiieDT5jAoPsuSjgNUlg7BEHhUmWpiOldfg8/yoMKXphFYAAIWfSgJ/SfefAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">19</td>
+      <td align="left">necesidades.vig
+[numeric]</td>
+      <td align="left">Needs - number of children (vignette
+level)</td>
+      <td align="left">Mean (sd) : 2.5 (1.1)
+min < med < max:
+1 < 2 < 4
+IQR (CV) : 2 (0.4)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">395</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">25.2%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">392</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">25.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">390</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">24.9%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">392</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">25.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAADIAAABoBAMAAABBBL4TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAADlJREFUSMdjYKAfUMIEUBllY3RgNCozbGVwpwNBTEATmdGUOCozmhJHZQaPzGhKHJUZHDK40wE9AAB1fT4EmR20agAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">20</td>
+      <td align="left">educ_madre.vig
+[numeric]</td>
+      <td align="left">Mother's education level (vignette
+level)</td>
+      <td align="left">Mean (sd) : 3 (1.4)
+min < med < max:
+1 < 3 < 5
+IQR (CV) : 2 (0.5)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">321</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.5%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">309</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">19.7%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">315</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.1%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">310</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">19.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">314</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.0%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAACsAAACABAMAAABgqI3eAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAE1JREFUSMdjYKAtUEIFClBhZWMUMCo8FIRxxKUgKhAgSxjNbAGsLjEaFR7CwjiimBbJZ/DlnVFhSoVHS59RYQqER0ufUWFihHHEJa0AAMlYSgJIIo0AAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">21</td>
+      <td align="left">ingresos.vig
+[numeric]</td>
+      <td align="left">Income in CLP (vignette level)</td>
+      <td align="left">Mean (sd) : 2.9 (1.4)
+min < med < max:
+1 < 3 < 5
+IQR (CV) : 2 (0.5)</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">1</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">327</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">2</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">326</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.8%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">3</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">319</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">4</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">319</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">20.3%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 0 0 7px;margin:0;border:0" align="right">5</td><td style="padding:0 2px;border:0;" align="left">:</td><td style="padding:0 4px 0 6px;margin:0;border:0" align="right">278</td><td style="padding:0;border:0" align="left">(</td><td style="padding:0 2px;margin:0;border:0" align="right">17.7%</td><td style="padding:0 4px 0 0;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAACwAAACABAMAAACCdJanAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAExJREFUSMdjYKAtUEIDUGFlYxRgNCo8BIRxxKUgGiBLeDSdDHthOiYfRewuGRUewsI4ong0+YwKEyNMt+SjCBdGccmo8NAQxhGXtAIA3lBKrdTvjtUAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">22</td>
+      <td align="left">pertax.0
+[factor]</td>
+      <td align="left"></td>
+      <td align="left">1. 0
+2. 1</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">1354</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">86.3%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">215</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">13.7%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAI4AAAA4BAMAAADZQN1TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAEtJREFUSMdjYBgFhIASpQBqjrIxZcBo1JxRc0bNGTVn1ByamEOtcl6QUjDMzUEEmCJF5iDifdScUXNGzRk1Z9ScwWQOtcr5UYAbAAC3Wp86srq8PQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">23</td>
+      <td align="left">justax.0
+[factor]</td>
+      <td align="left"></td>
+      <td align="left">1. 0
+2. 1</td>
+      <td align="left" style="padding:0;vertical-align:middle"><table style="border-collapse:collapse;border:none;margin:0"><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">1164</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">74.2%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr><tr style="background-color:transparent"><td style="padding:0 5px 0 7px;margin:0;border:0" align="right">405</td><td style="padding:0 2px 0 0;border:0;" align="left">(</td><td style="padding:0;border:0" align="right">25.8%</td><td style="padding:0 4px 0 2px;border:0" align="left">)</td></tr></table></td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAHwAAAA4BAMAAADN+YH3AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqb39/f///+DdZCQAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAENJREFUSMdjYBjZQIlMANWubEwWMBrVPqp9VPuo9qGkncKiUpBMMBy0YwkVRRK0Y4m4Ue2j2ke1j2ofdtopLCpHKgAA6guCimCJoWgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">24</td>
+      <td align="left">taxperc.rec
+[numeric]</td>
+      <td align="left">Perceived income tax (P97.5)</td>
+      <td align="left">Mean (sd) : 132630 (160456.2)
+min < med < max:
+0 < 65000 < 860000
+IQR (CV) : 180000 (1.2)</td>
+      <td align="left" style="vertical-align:middle">176 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAH9JREFUaN7t2bENgDAMBVGvwAiEDcj+u1HglAHnY4SAu4buCSE7RTAjpeLN05UcW+oeGBgYGBgYGBgYGBgYGBgYGBgYGBgY2K+xdvuegvlzBfsSpv2f6WDaDIPdhQX3P4YFx++tWPtWKdjgyj6InYzIGFaP31DDOieUYyUlI6UNP3mAAO9TQaUAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">25</td>
+      <td align="left">taxjust.rec
+[numeric]</td>
+      <td align="left">Just income tax (P97.5)</td>
+      <td align="left">Mean (sd) : 90118.2 (132270.8)
+min < med < max:
+0 < 30000 < 700000
+IQR (CV) : 113000 (1.5)</td>
+      <td align="left" style="vertical-align:middle">124 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAIFJREFUaN7t2cENgCAQBVFakA5cO9D+e1MMQVAj2V1jPMwcCKeXz5kQyJKkxsFZxqZlCwwMDAwMDAwMDAwMDAwMDAwMDAwMDAzsl5j7U6DG3PPAwMAaTEp69oJ5Nn6F6d/6gOnn9TDVvB5W5kVp82HpMh+HGdun3GDxtDFj8kqBLK3vWENpR67l/wAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">26</td>
+      <td align="left">taxperc.ln
+[numeric]</td>
+      <td align="left">ln(perceived tax) - include $0</td>
+      <td align="left">Mean (sd) : 9.7 (4.1)
+min < med < max:
+0 < 11.1 < 13.7
+IQR (CV) : 2.3 (0.4)</td>
+      <td align="left" style="vertical-align:middle">176 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAJRJREFUaN7t2V0KgCAQRlG3UDvIdqD731tp0YD0Ow5hcb8HQYWDD44KOkc06VTpfYr067A4J4CBvYHJzjXAZHlgYGBgH8SWy9wKEwcMDAwM7A6WD+HBCBvTCBgYGBiYHivfxnVY4YCBgTWM5eK3wnIDBvZzbPfKVGOHDhhYW9j2s2SBpdlgip2X5UMsXjcr5k3iiCYTLifpHo78xvkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDBFZEfXAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwNDn/awAAAABJRU5ErkJggg=="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">27</td>
+      <td align="left">taxjust.ln
+[numeric]</td>
+      <td align="left">ln(just tax) - include $0</td>
+      <td align="left">Mean (sd) : 8.1 (4.9)
+min < med < max:
+0 < 10.3 < 13.5
+IQR (CV) : 11.6 (0.6)</td>
+      <td align="left" style="vertical-align:middle">124 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAIxJREFUaN7t2EEKgCAQRmGvUDdIb5D3v1s5hUIMBPoXEe8t3PkxG1EMgXqKpWUa7MRS3gMDAwMDAwMD+xQ223tHhZVd6zh2DKXCzAEDew1rZ0qAtfHAwMDAXKddmQLs4oCBgYGBgYGBiTD3zdKNeY4es5FVmC1gYP/E6jeIAkv19KmwfL88gUVJgXraAKg+3Uv++3DNAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTA4LTIxVDE3OjQ1OjIyLTA0OjAwRWRH1wAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMDQ5/2sAAAAASUVORK5CYII="></td>
+      <td align="center">1569
+(100%)</td>
+      <td align="center">0
+(0%)</td>
+    </tr>
+    <tr>
+      <td align="center">28</td>
+      <td align="left">taxperc.ln2
+[numeric]</td>
+      <td align="left">ln(perceived tax) - exclude $0</td>
+      <td align="left">Mean (sd) : 11.3 (1.3)
+min < med < max:
+5.7 < 11.5 < 13.7
+IQR (CV) : 2 (0.1)</td>
+      <td align="left" style="vertical-align:middle">175 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAALdJREFUaN7t1mEOgyAMhmGuMG8wvIHc/25bF0hQINNSI5r3S/pH9Amp0ugc0eR1NP6b9/aiFptDCGBgYGZYcT57sGJ3YGBgYNXI6DHDEjQ2tpq2vdhqd2BFUrNNsPTgmFh+lLqxWoGBgYGBjYZNtdmvxkIDGhuTFngrTGoBAwMDOwX7jWwzTO4FA7sLlr5+GyxCYPuwvPn9WAapsSn+u9lgce0pmPSmhW3e5H9MqoVV6hrMm8QRTT428QhAb0va/gAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1354
+(86.3%)</td>
+      <td align="center">215
+(13.7%)</td>
+    </tr>
+    <tr>
+      <td align="center">29</td>
+      <td align="left">taxjust.ln2
+[numeric]</td>
+      <td align="left">ln(just tax) - exclude $0</td>
+      <td align="left">Mean (sd) : 10.9 (1.4)
+min < med < max:
+4.8 < 11 < 13.5
+IQR (CV) : 2.1 (0.1)</td>
+      <td align="left" style="vertical-align:middle">123 distinct values</td>
+      <td align="left" style="vertical-align:middle;padding:0;background-color:transparent"><img style="border:none;background-color:transparent;padding:0" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAJgAAABuBAMAAAApJ8cWAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAD1BMVEX////9/v2mpqby8vL///8shn5hAAAAAnRSTlMAAHaTzTgAAAABYktHRACIBR1IAAAAB3RJTUUH5AgVDS0WypBjtQAAAIdJREFUaN7t18EJgDAMQNGsoBtYN7D77ybYeIhIoWkOofx/KRR82B6CipCnbbC9tOyuF6tPVyLsPV8MpgoYGFhqzI61Scy+IBgYGBhYGuzzlTeJ/SpgYGBgYGBgYGBgYGtivb+JYezsKOkxvYkYTBcwMDCwAEzH0xGCtcermjGYWZbASkhCnm52CE7jmQ6f0gAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wOC0yMVQxNzo0NToyMi0wNDowMEVkR9cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDgtMjFUMTc6NDU6MjItMDQ6MDA0Of9rAAAAAElFTkSuQmCC"></td>
+      <td align="center">1164
+(74.19%)</td>
+      <td align="center">405
+(25.81%)</td>
+    </tr>
+  </tbody>
+</table>
+<p>Generated by <a href='https://github.com/dcomtois/summarytools'>summarytools</a> 0.9.6 (<a href='https://www.r-project.org/'>R</a> version 4.0.0)<br/>2020-08-21</p>
+</div>
+</div>
+<div id="save-data" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Save data</h1>
+<pre class="r"><code>save(vig_resp,file = &quot;input/data/proc/vig_resp-b.RData&quot;)</code></pre>
+</div>
+<div id="session-info" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Session info</h1>
+<pre class="r"><code>sessioninfo::session_info()</code></pre>
+<pre><code>## - Session info -----------------------------------------------------------------
+##  setting  value                       
+##  version  R version 4.0.0 (2020-04-24)
+##  os       Windows 10 x64              
+##  system   x86_64, mingw32             
+##  ui       RStudio                     
+##  language (EN)                        
+##  collate  Spanish_Chile.1252          
+##  ctype    Spanish_Chile.1252          
+##  tz       America/Santiago            
+##  date     2020-08-21                  
+## 
+## - Packages ---------------------------------------------------------------------
+##  package      * version  date       lib source                         
+##  assertthat     0.2.1    2019-03-21 [1] CRAN (R 4.0.0)                 
+##  backports      1.1.6    2020-04-05 [1] CRAN (R 4.0.0)                 
+##  base64enc      0.1-3    2015-07-28 [1] CRAN (R 4.0.0)                 
+##  bayestestR     0.6.0    2020-04-20 [1] CRAN (R 4.0.0)                 
+##  blob           1.2.1    2020-01-20 [1] CRAN (R 4.0.0)                 
+##  bookdown       0.18     2020-03-05 [1] CRAN (R 4.0.0)                 
+##  boot           1.3-24   2019-12-20 [2] CRAN (R 4.0.0)                 
+##  broom          0.5.6    2020-04-20 [1] CRAN (R 4.0.0)                 
+##  captioner    * 2.2.3    2015-07-16 [1] CRAN (R 4.0.0)                 
+##  cellranger     1.1.0    2016-07-27 [1] CRAN (R 4.0.0)                 
+##  checkmate      2.0.0    2020-02-06 [1] CRAN (R 4.0.0)                 
+##  cli            2.0.2    2020-02-28 [1] CRAN (R 4.0.0)                 
+##  coda           0.19-3   2019-07-05 [1] CRAN (R 4.0.0)                 
+##  codetools      0.2-16   2018-12-24 [2] CRAN (R 4.0.0)                 
+##  colorspace     1.4-1    2019-03-18 [1] CRAN (R 4.0.0)                 
+##  crayon         1.3.4    2017-09-16 [1] CRAN (R 4.0.0)                 
+##  data.table   * 1.12.8   2019-12-09 [1] CRAN (R 4.0.0)                 
+##  DBI            1.1.0    2019-12-15 [1] CRAN (R 4.0.0)                 
+##  dbplyr         1.4.4    2020-05-27 [1] CRAN (R 4.0.0)                 
+##  digest         0.6.25   2020-02-23 [1] CRAN (R 4.0.0)                 
+##  dplyr        * 0.8.5    2020-03-07 [1] CRAN (R 4.0.0)                 
+##  effectsize     0.3.0    2020-04-11 [1] CRAN (R 4.0.0)                 
+##  ellipsis       0.3.0    2019-09-20 [1] CRAN (R 4.0.0)                 
+##  emmeans        1.4.6    2020-04-19 [1] CRAN (R 4.0.0)                 
+##  estimability   1.3      2018-02-11 [1] CRAN (R 4.0.0)                 
+##  evaluate       0.14     2019-05-28 [1] CRAN (R 4.0.0)                 
+##  fansi          0.4.1    2020-01-08 [1] CRAN (R 4.0.0)                 
+##  farver         2.0.3    2020-01-16 [1] CRAN (R 4.0.0)                 
+##  forcats      * 0.5.0    2020-03-01 [1] CRAN (R 4.0.0)                 
+##  fs             1.4.1    2020-04-04 [1] CRAN (R 4.0.0)                 
+##  generics       0.0.2    2018-11-29 [1] CRAN (R 4.0.0)                 
+##  ggeffects      0.14.3   2020-04-20 [1] CRAN (R 4.0.0)                 
+##  ggplot2      * 3.3.0    2020-03-05 [1] CRAN (R 4.0.0)                 
+##  glue           1.4.0    2020-04-03 [1] CRAN (R 4.0.0)                 
+##  gtable         0.3.0    2019-03-25 [1] CRAN (R 4.0.0)                 
+##  haven          2.3.1    2020-06-01 [1] CRAN (R 4.0.2)                 
+##  highr          0.8      2019-03-20 [1] CRAN (R 4.0.0)                 
+##  hms            0.5.3    2020-01-08 [1] CRAN (R 4.0.0)                 
+##  htmltools      0.4.0    2019-10-04 [1] CRAN (R 4.0.0)                 
+##  httr           1.4.1    2019-08-05 [1] CRAN (R 4.0.0)                 
+##  insight        0.8.3    2020-04-20 [1] CRAN (R 4.0.0)                 
+##  jsonlite       1.6.1    2020-02-02 [1] CRAN (R 4.0.0)                 
+##  kableExtra   * 1.1.0    2019-03-16 [1] CRAN (R 4.0.0)                 
+##  knitr        * 1.28     2020-02-06 [1] CRAN (R 4.0.0)                 
+##  labeling       0.3      2014-08-23 [1] CRAN (R 4.0.0)                 
+##  lattice        0.20-41  2020-04-02 [2] CRAN (R 4.0.0)                 
+##  lifecycle      0.2.0    2020-03-06 [1] CRAN (R 4.0.0)                 
+##  lme4         * 1.1-23   2020-04-07 [1] CRAN (R 4.0.0)                 
+##  lubridate      1.7.8    2020-04-06 [1] CRAN (R 4.0.0)                 
+##  magick         2.3      2020-01-24 [1] CRAN (R 4.0.0)                 
+##  magrittr       1.5      2014-11-22 [1] CRAN (R 4.0.0)                 
+##  MASS           7.3-51.5 2019-12-20 [2] CRAN (R 4.0.0)                 
+##  Matrix       * 1.2-18   2019-11-27 [2] CRAN (R 4.0.0)                 
+##  matrixStats    0.56.0   2020-03-13 [1] CRAN (R 4.0.0)                 
+##  mice         * 3.9.0    2020-05-14 [1] CRAN (R 4.0.0)                 
+##  minqa          1.2.4    2014-10-09 [1] CRAN (R 4.0.0)                 
+##  modelr         0.1.7    2020-04-30 [1] CRAN (R 4.0.0)                 
+##  munsell        0.5.0    2018-06-12 [1] CRAN (R 4.0.0)                 
+##  mvtnorm        1.1-0    2020-02-24 [1] CRAN (R 4.0.0)                 
+##  nlme           3.1-147  2020-04-13 [2] CRAN (R 4.0.0)                 
+##  nloptr         1.2.2.1  2020-03-11 [1] CRAN (R 4.0.0)                 
+##  pander         0.6.3    2018-11-06 [1] CRAN (R 4.0.0)                 
+##  parameters     0.6.1    2020-04-08 [1] CRAN (R 4.0.0)                 
+##  performance    0.4.6    2020-05-03 [1] CRAN (R 4.0.0)                 
+##  pillar         1.4.4    2020-05-05 [1] CRAN (R 4.0.0)                 
+##  pkgconfig      2.0.3    2019-09-22 [1] CRAN (R 4.0.0)                 
+##  plyr           1.8.6    2020-03-03 [1] CRAN (R 4.0.0)                 
+##  pryr           0.1.4    2018-02-18 [1] CRAN (R 4.0.0)                 
+##  purrr        * 0.3.4    2020-04-17 [1] CRAN (R 4.0.0)                 
+##  R6             2.4.1    2019-11-12 [1] CRAN (R 4.0.0)                 
+##  rapportools    1.0      2014-01-07 [1] CRAN (R 4.0.0)                 
+##  Rcpp           1.0.4.6  2020-04-09 [1] CRAN (R 4.0.0)                 
+##  readr        * 1.3.1    2018-12-21 [1] CRAN (R 4.0.0)                 
+##  readxl       * 1.3.1    2019-03-13 [1] CRAN (R 4.0.0)                 
+##  reprex         0.3.0    2019-05-16 [1] CRAN (R 4.0.0)                 
+##  rlang          0.4.6    2020-05-02 [1] CRAN (R 4.0.0)                 
+##  rmarkdown      2.1      2020-01-20 [1] CRAN (R 4.0.0)                 
+##  rstudioapi     0.11     2020-02-07 [1] CRAN (R 4.0.0)                 
+##  rvest          0.3.5    2019-11-08 [1] CRAN (R 4.0.0)                 
+##  scales         1.1.1    2020-05-11 [1] CRAN (R 4.0.0)                 
+##  sessioninfo  * 1.1.1    2018-11-05 [1] CRAN (R 4.0.2)                 
+##  sjlabelled   * 1.1.4    2020-04-30 [1] CRAN (R 4.0.0)                 
+##  sjmisc         2.8.4    2020-04-03 [1] CRAN (R 4.0.0)                 
+##  sjPlot       * 2.8.3    2020-03-09 [1] CRAN (R 4.0.0)                 
+##  sjstats        0.18.0   2020-05-06 [1] CRAN (R 4.0.0)                 
+##  stargazer    * 5.2.2    2018-05-30 [1] CRAN (R 4.0.0)                 
+##  statmod        1.4.34   2020-02-17 [1] CRAN (R 4.0.0)                 
+##  stringi      * 1.4.6    2020-02-17 [1] CRAN (R 4.0.0)                 
+##  stringr      * 1.4.0    2019-02-10 [1] CRAN (R 4.0.0)                 
+##  summarytools * 0.9.6    2020-03-02 [1] CRAN (R 4.0.0)                 
+##  texreg       * 1.37.5   2020-08-10 [1] Github (leifeld/texreg@fafb343)
+##  tibble       * 3.0.1    2020-04-20 [1] CRAN (R 4.0.0)                 
+##  tidyr        * 1.0.3    2020-05-07 [1] CRAN (R 4.0.0)                 
+##  tidyselect     1.1.0    2020-05-11 [1] CRAN (R 4.0.0)                 
+##  tidyverse    * 1.3.0    2019-11-21 [1] CRAN (R 4.0.0)                 
+##  tinytex        0.22     2020-04-17 [1] CRAN (R 4.0.0)                 
+##  vctrs          0.3.0    2020-05-11 [1] CRAN (R 4.0.0)                 
+##  viridisLite    0.3.0    2018-02-01 [1] CRAN (R 4.0.0)                 
+##  webshot        0.5.2    2019-11-22 [1] CRAN (R 4.0.0)                 
+##  withr          2.2.0    2020-04-20 [1] CRAN (R 4.0.0)                 
+##  xfun           0.13     2020-04-13 [1] CRAN (R 4.0.0)                 
+##  xml2           1.3.2    2020-04-23 [1] CRAN (R 4.0.0)                 
+##  xtable         1.8-4    2019-04-21 [1] CRAN (R 4.0.0)                 
+##  yaml           2.2.1    2020-02-01 [1] CRAN (R 4.0.0)                 
+## 
+## [1] C:/Users/Julio/Documents/R/win-library/4.0
+## [2] C:/Program Files/R/R-4.0.0/library</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

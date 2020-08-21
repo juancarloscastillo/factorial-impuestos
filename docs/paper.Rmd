@@ -1,0 +1,88 @@
+---
+title: "Perceived and Just Taxes in Chile: A factorial survey approach"
+css: "../input/css/custom.css"
+linestretch: '1.5'
+link-citations: yes
+output:
+  html_document:
+    theme: flatly
+    number_sections: true
+    always_allow_html: yes
+  pdf_document:
+    keep_tex: false
+    template: null
+    number_sections: true
+linkcolor: blue
+bibliography:
+  - ../input/bib/EconomiaMoral.bib
+  - ../input/bib/meritocracy.bib
+editor_options:
+  chunk_output_type: console
+geometry: margin=0.78in
+header-includes:
+  # - \usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+  - \usepackage{caption}
+  - \captionsetup[figure, table]{labelfont={bf},labelformat={default},labelsep=period}
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+---
+
+```{r include=FALSE}
+# for render in pdf run rmarkdown::render_site("docs/paper.Rmd", output_format = "all")
+# clean #in the yml
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,message = FALSE, cache = FALSE)
+knitr::opts_knit$set(root.dir = "../")
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE, echo=FALSE}
+library(knitr)
+#install.packages("KableExtra")
+library(kableExtra)
+library(dplyr)
+#install.packages("captioner")
+library(captioner)
+#install.packages("estimatr")
+```
+
+```{r echo=FALSE }
+table_format = if(is_html_output()) {
+  "html"
+} else if(is_latex_output()) {
+  "latex"
+}
+
+
+table_format2 = if(is_html_output()) {
+  T
+} else if(is_latex_output()) {
+  F
+}
+
+
+```
+
+```{r include=FALSE}
+table_nums <- captioner(prefix = "Table")
+fig_nums   <- captioner(prefix = "Figure")
+anx_nums<-captioner(prefix = "Annexed")
+```
+
+
+Esto es un paper... :)

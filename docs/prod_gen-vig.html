@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Vignette generation</title>
+
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="custom.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Factorial Survey: Perceived and Just taxes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="prod_gen-vig.html">Vignette generation</a>
+    </li>
+    <li>
+      <a href="prod_prep-data-a.html">Data preparation A</a>
+    </li>
+    <li>
+      <a href="prod_prep-data-b.html">Data preparation B</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="prod_analysis.html">Analysis</a>
+</li>
+<li>
+  <a href="paper.html">Paper</a>
+</li>
+<li>
+  <a href="paper.pdf">
+    <span class="fa fa-file-pdf"></span>
+     
+    
+  </a>
+</li>
+<li>
+  <a href="https://github.com/juancarloscastillo/factorial-impuestos">
+    <span class="fa fa-github fa-lg"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Vignette generation</h1>
+<h4 class="date">viernes 21 agosto 2020 19:26:47</h4>
+
+</div>
+
+
+<div id="percepciones-y-preferencias-sobre-los-impuestos-a-la-renta." class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Percepciones y preferencias sobre los impuestos a la renta.</h1>
+<p><strong>FONDECYT 1160921. Economía moral de la meritocracia y preferencias redistributivas.</strong></p>
+<p>El presente proyecto de investigación tiene por objetivo identificar cuáles son las características de los contribuyentes que los ciudadanos consideran relevantes al decidir el monto que debería pagar en impuesto a la renta. Para este propósito se ha diseñado una encuesta factorial, donde en cada viñeta se presentará una caracterización de un perfil ficticio y dos preguntas: “¿Cuánto cree usted que la persona descrita paga actualmente en impuesto a la renta?” y "¿Cuánto cree usted que la persona descrita debería pagar en impuesto a la renta?. En la siguiente tabla se presentan las dimensiones y los niveles de las viñetas.</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Dimensiones</strong></th>
+<th><strong>Operacionalización</strong></th>
+<th><strong>Niveles</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Sexo</strong></td>
+<td></td>
+<td><strong>1.</strong> Hombre</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>2.</strong> Mujer</td>
+</tr>
+<tr class="odd">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="even">
+<td><strong>Apellido</strong></td>
+<td></td>
+<td><strong>1.</strong> Español</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>2.</strong> Vasco-Castellano</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>3.</strong> Europeo</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>4.</strong> Indígena</td>
+</tr>
+<tr class="even">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="odd">
+<td><strong>Edad</strong></td>
+<td></td>
+<td><strong>1.</strong> 35 años</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>2.</strong> 45 años</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>3.</strong> 55 años</td>
+</tr>
+<tr class="even">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="odd">
+<td><strong>Nivel socioeconómico</strong></td>
+<td>Dependencia de la escuela</td>
+<td><strong>1.</strong> Municipal</td>
+</tr>
+<tr class="even">
+<td><strong>de origen</strong></td>
+<td>a la que asistió</td>
+<td><strong>2.</strong> Subvencionado</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>3.</strong> Particular</td>
+</tr>
+<tr class="even">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="odd">
+<td><strong>Nivel educativo</strong></td>
+<td></td>
+<td><strong>1.</strong> Educación básica completa</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>2.</strong> Educación media completa</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>3.</strong> Educación técnico-profesional completa</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>4.</strong> Educación universitaria completa</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>5.</strong> Estudios de postgrado</td>
+</tr>
+<tr class="even">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="odd">
+<td><strong>Necesidades</strong></td>
+<td>Cantidad de hijos</td>
+<td><strong>1.</strong> No tiene hijos</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>2.</strong> Tiene 1 hijo</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>3.</strong> Tiene 2 hijos</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>4.</strong> Tiene 5 hijos</td>
+</tr>
+<tr class="odd">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="even">
+<td><strong>Educación de la madre</strong></td>
+<td></td>
+<td><strong>1.</strong> Educación básica completa</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>2.</strong> Educación media completa</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>3.</strong> Educación técnico-profesional completa</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>4.</strong> Educación universitaria completa</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>5.</strong> Estudios de postgrado</td>
+</tr>
+<tr class="odd">
+<td>————–</td>
+<td>——————-</td>
+<td>——————</td>
+</tr>
+<tr class="even">
+<td><strong>Ingresos</strong></td>
+<td>Ingresos mensuales</td>
+<td><strong>1.</strong> $320.500</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>2.</strong> $655.000</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>3.</strong> $1.200.000</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td><strong>4.</strong> $2.500.000</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td><strong>5.</strong> $4.300.000</td>
+</tr>
+</tbody>
+</table>
+<p>Las frases que se presentan en las viñetas fueron generadas a partir de un procedimiento que selecciona las combinaciones entre los niveles de las dimensiones (se explicará en detalle más adelante). Con el objetivo de que no se repitiesen constantemente los mismos apellidos y edades durante la encuesta, se hizo una programación en Qualtrics para que el apellido y la edad que se presente en la viñeta se seleccione al azar desde una lista de posibilidades que se asoció a cada nivel. A continuación se presenta la lista de apellidos y edades que se presentaron de forma aleatoria</p>
+<p><strong>Apellidos</strong></p>
+<ul>
+<li><strong>Español:</strong> González, Muñoz, Rojas, Díaz, Pérez, Figueroa, Reyes, Correa, Bravo, Vergara, Zúñiga, Valenzuela, Molina, Castro, Escobar, Salas, Campos, Gallardo, Gaete y Fuenzalida. Estos apellidos fueron seleccionados de un artículo donde se mencionan varios apellidos asociados al linaje español en Chile. (Vázquez de Acuña, 1986).<br />
+</li>
+<li><strong>Vasco-castellano:</strong> Amunategui, Madariaga, Zañartu, de Sasia, Errázuriz, Irarrázaval, Astaburuaga, Ariztía, Tagle, Enríquez, Vicuña, Larraín, Echenique, Undurraga, Otero, Ampuero, Baquedano y Casanova. La mayoría de los apellidos seleccionados aparece en la lista de los “50 apellidos con mayor porcentaje de profesionales de
+prestigio” expuesta en un estudio del PNUD (2017). Los apellidos incorporados desde esa lista fueron evaluados a partir del artículo de Fernández (2010) sobre el linaje Vasco en Chile. Se incorporó un par de apellidos que no aparece en la primera lista, pero sí en el artículo de Fernández.<br />
+</li>
+<li><strong>Europeo:</strong> Zegers, Schmidt, Edwards, Moore, Petersen, Klein, Hitschfeld, Moller, Lyon, Neumann, Hott, Richards, Campbell, Werner, Bunster, Walker y Niklitschek. Todos estos apellidos fueron seleccionados desde la lista de “50 apellidos con mayor porcentaje de profesionales de prestigio” (PNUD, 2017, p.34).<br />
+</li>
+<li><strong>Indígena:</strong> Mariman, Huenchual, Colipi, Carilao, Caripan, Maliqueo, Huenulef, Llanquiman, Lincopi, Melinao, Huaiquipan, Lienlaf, Catrinao, Cheuqueman, Huenchu, Cayupan, Huenten, Levican, Huaiquimil y Pailahueque. Todos estos apellidos fueron seleccionados a partir de la lista de “50 apellidos donde no hay un solo profesional de prestigio” (PNUD, 2017, p.34).</li>
+</ul>
+<p><strong>Edades</strong></p>
+<ul>
+<li><strong>35:</strong> 33, 35 y 37 años.<br />
+</li>
+<li><strong>45:</strong> 43, 45 y 47 años.<br />
+</li>
+<li><strong>55:</strong> 53, 55 y 57 años.</li>
+</ul>
+</div>
+<div id="construcción-del-instrumento-de-medición" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Construcción del instrumento de medición</h1>
+<p>A continuación se expondrá el proceso de construcción del instrumento. Tras la definición de las dimensiones y niveles se procedió a seleccionar la muestra de viñetas a través de SAS Studio. Es posible subdividir este proceso en tres partes para explicar de mejor forma el procedimiento: la primera orientada a escoger el tamaño de la muestra de viñetas, la segunda enfocada en seleccionar la combinación con el mejor D-efficient y la tercera dirigida a generar las combinaciones para los bloques de viñetas. El resultado de este proceso se transformó en las frases para los bloques de viñetas a través de R y luego se traspaso a la plataforma Qualtrics para finalizar la elaboración de la encuesta.</p>
+<div id="proceso-en-sas" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Proceso en SAS</h2>
+<div id="primera-parte" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Primera parte</h3>
+<p>Para seleccionar el tamaño de la muestra de viñetas se utilizó la macro MktRuns. Se introdujo el siguiente código, donde cada número representa una dimensión y sus niveles:</p>
+<pre><code> %mktruns(2 4 3 3 5 4 5 5)</code></pre>
+<p>Y se obtuvo como output:</p>
+<div class="figure">
+<img src="../output/output_sas_1.png" title="Output SAS n°1" alt="" />
+<p class="caption">Output SAS n°1</p>
+</div>
+<p>Ninguno de los tamaños sugeridos corresponde a una muestra 100% óptima, por lo que se ha optado por aquel tamaño que posee menos violaciones (diseño de 120 viñetas, con 5 violaciones).</p>
+</div>
+<div id="segunda-parte" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Segunda parte</h3>
+<p>Para identificar las combinaciones con el mejor D-Efficient se utilizó la macro MktEx. Se introdujo el siguiente código, donde “n” refleja el tamaño de la muestra de viñetas y “seed” permite obtener resultados reproducibles (podría ser cualquier cifra):</p>
+<pre><code> %mktex( 2 4 3 3 5 4 5 5, n=120, seed=2624)
+ </code></pre>
+<p>El output obtenido abarca aproximadamente 11 planas, pero a continuación se presentan los dos resultados principales:</p>
+<div class="figure">
+<img src="../output/output_sas_2.a.png" title="Output SAS n°2.a" alt="" />
+<p class="caption">Output SAS n°2.a</p>
+</div>
+<div class="figure">
+<img src="../output/output_sas_2.b.png" title="Output SAS n°2.b" alt="" />
+<p class="caption">Output SAS n°2.b</p>
+</div>
+<p>A partir de estos resultados es posible precisar que la muestra eficiente de viñetas (la muestra que minimizó la covarianza de las dimensiones) posee un D-Efficient = 99.7691.</p>
+</div>
+<div id="tercera-parte" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Tercera parte</h3>
+<p>Para generar los bloques de viñetas se utilizó la macro MktBlock. Se introdujo el siguiente código, donde data corresponde al output del proceso anterior (que, por defecto, se llama Randomized) y nblocks indica el número de bloques en que se divide la muestra:</p>
+<pre><code>%mktblock(data=Randomized, nblocks=10, seed=2624)</code></pre>
+<p>Y se obtuvo como output 10 tablas que representan los bloques de viñetas con las combinaciones entre los niveles de las dimensiones, a partir de los cuales es posible elaborar las frases para las viñetas:</p>
+<p><img src="../output/output_sas_3.a.png" title="Output SAS n°3.a" alt="Output SAS n°3.a" />
+<img src="../output/output_sas_3.b.png" title="Output SAS n°3.b" alt="Output SAS n°3.b" />
+<img src="../output/output_sas_3.c.png" title="Output SAS n°3.c" alt="Output SAS n°3.c" />
+<img src="../output/output_sas_3.d.png" title="Output SAS n°3.d" alt="Output SAS n°3.d" />
+<img src="../output/output_sas_3.e.png" title="Output SAS n°3.e" alt="Output SAS n°3.e" />
+<img src="../output/output_sas_3.f.png" title="Output SAS n°3.f" alt="Output SAS n°3.f" />
+<img src="../output/output_sas_3.g.png" title="Output SAS n°3.g" alt="Output SAS n°3.g" />
+<img src="../output/output_sas_3.h.png" title="Output SAS n°3.h" alt="Output SAS n°3.h" />
+<img src="../output/output_sas_3.i.png" title="Output SAS n°3.i" alt="Output SAS n°3.i" />
+<img src="../output/output_sas_3.j.png" title="Output SAS n°3.j" alt="Output SAS n°3.j" /></p>
+<p>Estas combinaciones numéricas fueron transformadas en las frases para las viñetas a través de R.</p>
+</div>
+</div>
+<div id="proceso-en-r" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Proceso en R</h2>
+<p>A continuación se presenta el código que se utilizo para generar el listado de frases para las viñetas.</p>
+<pre class="r"><code>library(readxl)
+library(tidyverse)</code></pre>
+</div>
+<div id="extraer-hojas-a-objeto-como-lista" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Extraer hojas a objeto como lista</h2>
+<pre class="r"><code>path &lt;-&quot;input/vinetas.xlsx&quot;
+decks &lt;-path %&gt;%
+  excel_sheets() %&gt;%
+  set_names() %&gt;%
+  map(read_excel, path = path)## Cambiar nombres columnas</code></pre>
+<pre class="r"><code>colnames(decks$Hoja1)
+colnames = c(&quot;sexo&quot;, &quot;apellido&quot;, &quot;edad&quot;, &quot;nivel_socioeconómico_de_origen&quot;, &quot;nivel_educativo&quot;, &quot;necesidades&quot;, &quot;educación_de_la_madre&quot;, &quot;ingresos&quot;, &quot;p1&quot;)
+for (i in seq_along(decks)){
+  colnames(decks[[i]]) &lt;- colnames
+}
+colnames(decks$Hoja1) # comprobar
+## Agregar ID único de cada viñeta y id de deck</code></pre>
+<pre><code>## [1] &quot;x1&quot; &quot;x2&quot; &quot;x3&quot; &quot;x4&quot; &quot;x5&quot; &quot;x6&quot; &quot;x7&quot; &quot;x8&quot; &quot;p1&quot;
+## [1] &quot;sexo&quot;                           &quot;apellido&quot;                      
+## [3] &quot;edad&quot;                           &quot;nivel_socioeconómico_de_origen&quot;
+## [5] &quot;nivel_educativo&quot;                &quot;necesidades&quot;                   
+## [7] &quot;educación_de_la_madre&quot;          &quot;ingresos&quot;                      
+## [9] &quot;p1&quot;</code></pre>
+<pre class="r"><code>for (i in seq_along(decks)){
+  decks[[i]]&lt;- decks[[i]] %&gt;% add_column(id = 1:12) %&gt;% add_column(deck = i) 
+}</code></pre>
+<pre class="r"><code>vig_dat&lt;- plyr::ldply(decks) %&gt;% select(-.id) %&gt;% mutate(deck_vig=paste0(deck,id)) %&gt;% select(deck,id,deck_vig,everything())</code></pre>
+<pre class="r"><code>save(vig_dat,file = &quot;input/data/proc/vig_dim.RData&quot;)</code></pre>
+</div>
+<div id="etiquetado-de-los-niveles-de-las-viñetas-para-generación-de-textos" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Etiquetado de los niveles de las viñetas para generación de textos</h2>
+<pre class="r"><code>for (i in seq_along(decks)){
+  decks[[i]]&lt;- decks[[i]] %&gt;% 
+    mutate(sexo = recode(sexo, `1` = &quot;[[Question:DB:El señor&quot;, `2` = &quot;[[Question:DB:La señora&quot;),
+           apellido  = recode(apellido, `1` = &quot;${e://Field/Espanol}&quot;, `2` = &quot;${e://Field/Vasco-Castellano}&quot;, `3` = &quot;${e://Field/Europeo}&quot;, `4` = &quot;${e://Field/Indigena}&quot;),
+           edad = recode(edad, `1` = &quot;tiene ${e://Field/35} años,&quot;, `2` = &quot;tiene ${e://Field/45} años,&quot;, `3` = &quot;tiene ${e://Field/55} años,&quot;),
+           nivel_socioeconómico_de_origen  = recode(nivel_socioeconómico_de_origen, `1` = &quot;estudió en un colegio municipal&quot;, `2` = &quot;estudió en un colegio subvencionado&quot;, `3` = &quot;estudió en un colegio privado&quot;),
+           nivel_educativo = recode(nivel_educativo, `1` = &quot;y completó la enseñanza básica.&quot;, `2` = &quot;y completó la enseñanza media.&quot;, `3` = &quot;y completó estudios técnico-profesionales.&quot;, `4` = &quot;y completó estudios universitarios.&quot;, `5` = &quot;y completó estudios de postgrado.&quot;),
+           necesidades  = recode(necesidades, `1` = &quot;No tiene hijos&quot;, `2` = &quot;Tiene un hijo&quot;, `3` = &quot;Tiene dos hijos&quot;, `4` = &quot;Tiene cinco hijos&quot;),
+           educación_de_la_madre = recode(educación_de_la_madre, `1` = &quot;y su madre completó la enseñanza básica.&quot;, `2` = &quot;y su madre completó la enseñanza media.&quot;, `3` = &quot;y su madre completó estudios técnico-profesionales.&quot;, `4` = &quot;y su madre completó estudios universitarios.&quot;, `5` = &quot;y su madre completó estudios de postgrado.&quot;),
+           ingresos = recode(ingresos, `1` = &quot;Actualmente recibe un ingreso mensual de $321.000 pesos]]&quot;, `2` = &quot;Actualmente recibe un ingreso mensual de $655.000 pesos]]&quot;, `3` = &quot;Actualmente recibe un ingreso mensual de $1.200.000 pesos]]&quot;, `4` = &quot;Actualmente recibe un ingreso mensual de $2.500.000 pesos]]&quot;, `5` = &quot;Actualmente recibe un ingreso mensual de $4.300.000 pesos]]&quot;),
+           p1 = recode(p1, `1` = &quot;[[PageBreak]]&quot;))
+}</code></pre>
+</div>
+</div>
+<div id="generación-de-textos-agrega-columna-vig-con-toda-la-información-de-cada-fila" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Generación de textos (agrega columna “vig” con toda la información de cada fila)</h1>
+<pre class="r"><code>for (i in seq_along(decks)){
+decks[[i]] &lt;- decks[[i]] %&gt;% 
+    rowwise() %&gt;% 
+    mutate(vig = paste(sexo, apellido, edad, nivel_socioeconómico_de_origen, nivel_educativo, necesidades, educación_de_la_madre, ingresos, p1)) %&gt;% 
+    ungroup()
+}</code></pre>
+<div id="viñetas-con-id-de-deck-y-intra-deck" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Viñetas (con ID de deck y intra-deck)</h2>
+<pre class="r"><code>for (i in seq_along(decks)){
+print(paste(decks[[i]]$deck,decks[[i]]$id,decks[[i]]$vig))
+}</code></pre>
+<pre><code>##  [1] &quot;1 1 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza básica. Tiene dos hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;
+##  [2] &quot;1 2 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios universitarios. Tiene un hijo y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                  
+##  [3] &quot;1 3 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza básica. No tiene hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;           
+##  [4] &quot;1 4 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio privado y completó estudios de postgrado. No tiene hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                   
+##  [5] &quot;1 5 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios de postgrado. Tiene cinco hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;            
+##  [6] &quot;1 6 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene dos hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;         
+##  [7] &quot;1 7 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza media. Tiene un hijo y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;              
+##  [8] &quot;1 8 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza media. No tiene hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                   
+##  [9] &quot;1 9 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios técnico-profesionales. No tiene hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;
+## [10] &quot;1 10 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza básica. Tiene cinco hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;           
+## [11] &quot;1 11 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene dos hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;          
+## [12] &quot;1 12 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio privado y completó estudios técnico-profesionales. Tiene un hijo y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;               
+##  [1] &quot;2 1 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios técnico-profesionales. No tiene hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;              
+##  [2] &quot;2 2 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio privado y completó estudios universitarios. Tiene dos hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;               
+##  [3] &quot;2 3 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio municipal y completó la enseñanza básica. Tiene un hijo y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                        
+##  [4] &quot;2 4 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio privado y completó estudios universitarios. No tiene hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                  
+##  [5] &quot;2 5 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios de postgrado. Tiene un hijo y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;        
+##  [6] &quot;2 6 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza básica. Tiene un hijo y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;             
+##  [7] &quot;2 7 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios de postgrado. Tiene cinco hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                         
+##  [8] &quot;2 8 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios de postgrado. Tiene dos hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                        
+##  [9] &quot;2 9 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza media. No tiene hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                       
+## [10] &quot;2 10 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó la enseñanza básica. Tiene dos hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                   
+## [11] &quot;2 11 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene cinco hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;
+## [12] &quot;2 12 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó la enseñanza media. Tiene cinco hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;     
+##  [1] &quot;3 1 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene un hijo y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;           
+##  [2] &quot;3 2 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza media. Tiene un hijo y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                          
+##  [3] &quot;3 3 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza básica. Tiene dos hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                         
+##  [4] &quot;3 4 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. Tiene un hijo y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;
+##  [5] &quot;3 5 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio privado y completó estudios universitarios. No tiene hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;             
+##  [6] &quot;3 6 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio privado y completó la enseñanza básica. Tiene dos hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                             
+##  [7] &quot;3 7 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio municipal y completó la enseñanza media. Tiene cinco hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                 
+##  [8] &quot;3 8 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios de postgrado. No tiene hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                  
+##  [9] &quot;3 9 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. Tiene cinco hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;           
+## [10] &quot;3 10 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene cinco hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;          
+## [11] &quot;3 11 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó estudios de postgrado. Tiene dos hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;           
+## [12] &quot;3 12 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio privado y completó estudios universitarios. No tiene hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                          
+##  [1] &quot;4 1 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios técnico-profesionales. Tiene un hijo y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;               
+##  [2] &quot;4 2 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios de postgrado. Tiene un hijo y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;       
+##  [3] &quot;4 3 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios universitarios. No tiene hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                       
+##  [4] &quot;4 4 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio privado y completó estudios universitarios. Tiene dos hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                     
+##  [5] &quot;4 5 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios de postgrado. No tiene hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;            
+##  [6] &quot;4 6 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene un hijo y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;       
+##  [7] &quot;4 7 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios de postgrado. Tiene cinco hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                  
+##  [8] &quot;4 8 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza media. Tiene dos hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;              
+##  [9] &quot;4 9 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza media. No tiene hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                       
+## [10] &quot;4 10 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó la enseñanza básica. Tiene dos hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;              
+## [11] &quot;4 11 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio municipal y completó la enseñanza básica. Tiene cinco hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;
+## [12] &quot;4 12 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. Tiene cinco hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;  
+##  [1] &quot;5 1 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. Tiene un hijo y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;    
+##  [2] &quot;5 2 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza media. Tiene cinco hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                             
+##  [3] &quot;5 3 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. Tiene dos hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;
+##  [4] &quot;5 4 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios de postgrado. Tiene cinco hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                  
+##  [5] &quot;5 5 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza básica. Tiene cinco hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;               
+##  [6] &quot;5 6 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio privado y completó estudios técnico-profesionales. Tiene dos hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;     
+##  [7] &quot;5 7 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio municipal y completó la enseñanza media. Tiene dos hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;              
+##  [8] &quot;5 8 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio municipal y completó estudios universitarios. Tiene cinco hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                 
+##  [9] &quot;5 9 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó la enseñanza media. No tiene hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;  
+## [10] &quot;5 10 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios de postgrado. Tiene un hijo y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                          
+## [11] &quot;5 11 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios universitarios. Tiene un hijo y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                  
+## [12] &quot;5 12 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza básica. No tiene hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                           
+##  [1] &quot;6 1 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio municipal y completó la enseñanza básica. Tiene un hijo y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                     
+##  [2] &quot;6 2 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio municipal y completó la enseñanza media. Tiene dos hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                  
+##  [3] &quot;6 3 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó estudios universitarios. No tiene hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;
+##  [4] &quot;6 4 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio privado y completó estudios técnico-profesionales. Tiene cinco hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;   
+##  [5] &quot;6 5 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios universitarios. Tiene cinco hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;           
+##  [6] &quot;6 6 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio municipal y completó la enseñanza media. Tiene un hijo y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;           
+##  [7] &quot;6 7 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios técnico-profesionales. No tiene hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;  
+##  [8] &quot;6 8 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios de postgrado. Tiene dos hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                
+##  [9] &quot;6 9 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios de postgrado. No tiene hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;   
+## [10] &quot;6 10 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó la enseñanza media. Tiene cinco hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;     
+## [11] &quot;6 11 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio municipal y completó la enseñanza básica. Tiene un hijo y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                      
+## [12] &quot;6 12 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene dos hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;  
+##  [1] &quot;7 1 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene cinco hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;         
+##  [2] &quot;7 2 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza media. Tiene cinco hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                    
+##  [3] &quot;7 3 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios de postgrado. Tiene dos hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;  
+##  [4] &quot;7 4 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio municipal y completó estudios de postgrado. No tiene hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;         
+##  [5] &quot;7 5 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio privado y completó estudios de postgrado. Tiene un hijo y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                    
+##  [6] &quot;7 6 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios técnico-profesionales. Tiene dos hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;
+##  [7] &quot;7 7 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza media. No tiene hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                    
+##  [8] &quot;7 8 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza básica. Tiene cinco hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;
+##  [9] &quot;7 9 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios universitarios. Tiene un hijo y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;            
+## [10] &quot;7 10 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene dos hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;    
+## [11] &quot;7 11 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza básica. Tiene un hijo y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                
+## [12] &quot;7 12 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó la enseñanza media. No tiene hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;              
+##  [1] &quot;8 1 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios universitarios. Tiene cinco hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;
+##  [2] &quot;8 2 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios universitarios. Tiene un hijo y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;               
+##  [3] &quot;8 3 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios de postgrado. No tiene hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                        
+##  [4] &quot;8 4 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene un hijo y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                 
+##  [5] &quot;8 5 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza media. Tiene dos hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                   
+##  [6] &quot;8 6 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. No tiene hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;            
+##  [7] &quot;8 7 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza media. Tiene un hijo y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;                                  
+##  [8] &quot;8 8 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio municipal y completó estudios de postgrado. Tiene dos hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                       
+##  [9] &quot;8 9 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios de postgrado. Tiene cinco hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;             
+## [10] &quot;8 10 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio privado y completó la enseñanza media. Tiene cinco hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                
+## [11] &quot;8 11 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó la enseñanza básica. Tiene dos hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                      
+## [12] &quot;8 12 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza básica. No tiene hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                           
+##  [1] &quot;9 1 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio privado y completó la enseñanza básica. Tiene un hijo y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                
+##  [2] &quot;9 2 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza básica. No tiene hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                    
+##  [3] &quot;9 3 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio municipal y completó estudios de postgrado. Tiene un hijo y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                      
+##  [4] &quot;9 4 [[Question:DB:La señora ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó la enseñanza media. Tiene un hijo y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;              
+##  [5] &quot;9 5 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. No tiene hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;      
+##  [6] &quot;9 6 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios universitarios. Tiene cinco hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;            
+##  [7] &quot;9 7 [[Question:DB:El señor ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene cinco hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;              
+##  [8] &quot;9 8 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio privado y completó estudios de postgrado. Tiene dos hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                        
+##  [9] &quot;9 9 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio municipal y completó estudios universitarios. Tiene dos hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;       
+## [10] &quot;9 10 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio municipal y completó la enseñanza básica. No tiene hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;               
+## [11] &quot;9 11 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene cinco hijos y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;
+## [12] &quot;9 12 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza media. Tiene dos hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;                       
+##  [1] &quot;10 1 [[Question:DB:La señora ${e://Field/Indigena} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza media. Tiene dos hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;                   
+##  [2] &quot;10 2 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios técnico-profesionales. Tiene dos hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;       
+##  [3] &quot;10 3 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/45} años, estudió en un colegio municipal y completó la enseñanza básica. Tiene cinco hijos y su madre completó la enseñanza media. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                    
+##  [4] &quot;10 4 [[Question:DB:El señor ${e://Field/Europeo} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios de postgrado. Tiene cinco hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;            
+##  [5] &quot;10 5 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza media. Tiene un hijo y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;                        
+##  [6] &quot;10 6 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/45} años, estudió en un colegio privado y completó estudios de postgrado. Tiene un hijo y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;  
+##  [7] &quot;10 7 [[Question:DB:La señora ${e://Field/Espanol} tiene ${e://Field/35} años, estudió en un colegio municipal y completó estudios técnico-profesionales. Tiene dos hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;        
+##  [8] &quot;10 8 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio privado y completó la enseñanza básica. No tiene hijos y su madre completó estudios universitarios. Actualmente recibe un ingreso mensual de $2.500.000 pesos]] [[PageBreak]]&quot;                  
+##  [9] &quot;10 9 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/35} años, estudió en un colegio subvencionado y completó estudios universitarios. No tiene hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $321.000 pesos]] [[PageBreak]]&quot;            
+## [10] &quot;10 10 [[Question:DB:La señora ${e://Field/Europeo} tiene ${e://Field/45} años, estudió en un colegio subvencionado y completó la enseñanza básica. Tiene cinco hijos y su madre completó la enseñanza básica. Actualmente recibe un ingreso mensual de $1.200.000 pesos]] [[PageBreak]]&quot;            
+## [11] &quot;10 11 [[Question:DB:El señor ${e://Field/Vasco-Castellano} tiene ${e://Field/35} años, estudió en un colegio privado y completó estudios técnico-profesionales. No tiene hijos y su madre completó estudios de postgrado. Actualmente recibe un ingreso mensual de $4.300.000 pesos]] [[PageBreak]]&quot;
+## [12] &quot;10 12 [[Question:DB:El señor ${e://Field/Indigena} tiene ${e://Field/55} años, estudió en un colegio subvencionado y completó estudios universitarios. Tiene un hijo y su madre completó estudios técnico-profesionales. Actualmente recibe un ingreso mensual de $655.000 pesos]] [[PageBreak]]&quot;</code></pre>
+<p>El output generado requirió ser levemente editado para poder ser importado a Qualtrics, teniendo que agregar al inicio de cada documento “[[AdvancedFormat]]” y en la línea siguiente “[[Block:01]]” (cambiando el número en función del que corresponda). Todas las frases debieron ser copiadas y pegadas en la línea de abajo, de modo que cada frase aparece dos veces en el archivo “.txt”: en una línea aparece la frase entre corchetes y en la línea siguiente aparece la frase sin corchetes. Luego de cada par de frases, en una línea diferente, se debe poner la instrucción “[[PageBreak]]”. Al realizar esos cambios el archivo puede ser importado a Qualtrics como encuesta. En la plataforma Qualtrics se aleatorizó los apellidos y las edades que se presentan en cada encuesta a través del comando “Set Embedded Data”, el procedimiento siguió las instrucciones expuestas en el artículo de Helfer et al. (2018).<br />
+En el siguiente enlace puede acceder a la encuesta: <a href="https://survey.co1.qualtrics.com/jfe/form/SV_3aTXLZ0mXUuQoLz">encuesta en línea</a></p>
+</div>
+</div>
+<div id="bibliografía" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Bibliografía</h1>
+<p>Fernández, P. (2010). <em>Linajes vascos en Chile</em>. Biblioteca virtual universal. Revisado el 15 de enero, 2020, en: <a href="https://biblioteca.org.ar/libros/155756.pdf" class="uri">https://biblioteca.org.ar/libros/155756.pdf</a></p>
+<p>Helfer, L., De Wilde, M., Proferes, N., McElhinney, H., Taylor, B. &amp; Sinclair, M. (2018). <em>Implementing a Factorial Survey in Qualtrics</em>. Revisado el 30 de marzo, 2020, en: <a href="https://luziahelfer.files.wordpress.com/2018/12/FS-Manual-Dec-2018.pdf" class="uri">https://luziahelfer.files.wordpress.com/2018/12/FS-Manual-Dec-2018.pdf</a></p>
+<p>PNUD (2017). <em>Desiguales. Orígenes, cambios y desafíos de la brecha social en Chile.</em> Santiago de Chile, Programa de las Naciones Unidas para el Desarrollo.</p>
+<p>Vázquez de Acuña, I. (1986). Nobleza colonial de Chile, linajes españoles [artículo en línea]. Boletín de la Academia Chilena de la Historia, no. 97, p. 476-477. Revisado el 15 de enero, 2020: <a href="http://www.bibliotecanacionaldigital.gob.cl/bnd/628/w3-article-585295.html" class="uri">http://www.bibliotecanacionaldigital.gob.cl/bnd/628/w3-article-585295.html</a></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

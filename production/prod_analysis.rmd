@@ -1,0 +1,54 @@
+---
+title: "Data analysis"
+date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
+css: "../input/css/custom.css"
+output:
+  bookdown::html_document2:
+    number_sections: true
+    toc: true
+    toc_float:
+      collapsed: false
+      toc_depth: 2
+    code_folding: "hide"
+editor_options:
+  chunk_output_type: console
+---
+
+```{r eval=FALSE, include=FALSE}
+rmarkdown::render(input = "production/prod_prep-data.Rmd",output_format = "html_document",output_dir = "production/");browseURL(url = "production/prod_analysis.html")
+```
+
+```{r include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,message = FALSE, cache = FALSE,results = "hold")
+knitr::opts_knit$set(root.dir = "../")
+options(scipen=999)
+rm(list=ls())
+options(knitr.kable.NA = '')
+Sys.setlocale("LC_MESSAGES", 'es_CL.UTF-8')
+Sys.setenv(LANG = "es_CL.UTF-8")
+```
+
+load packages
+```{r}
+library(sjlabelled)
+library(stringr)
+library(stringi)
+library(dplyr)
+library(datasets)
+library(data.table)
+library(tidyr)
+library(summarytools)
+library(sjPlot)
+library(stargazer)
+library(knitr)
+library(tidyverse)
+library(mice)
+library(texreg)
+library(lme4)
+```
+
+
+# Data
+
+
+
